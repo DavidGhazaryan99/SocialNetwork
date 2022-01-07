@@ -6,11 +6,46 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Pages\**" />
+    <Content Remove="Areas\Pages\**" />
+    <EmbeddedResource Remove="Areas\Pages\**" />
+    <None Remove="Areas\Pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20211113103131_migration5.cs" />
+    <Compile Remove="Data\Migrations\20211113103131_migration5.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211113111618_migration6.cs" />
+    <Compile Remove="Data\Migrations\20211113111618_migration6.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211205115335_migration9.cs" />
+    <Compile Remove="Data\Migrations\20211205115335_migration9.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211210003754_migration10.cs" />
+    <Compile Remove="Data\Migrations\20211210003754_migration10.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211210004820_migration11.cs" />
+    <Compile Remove="Data\Migrations\20211210004820_migration11.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211210005120_migration10.cs" />
+    <Compile Remove="Data\Migrations\20211210005120_migration10.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211210005249_migration10.cs" />
+    <Compile Remove="Data\Migrations\20211210005249_migration10.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211210005426_migration10.cs" />
+    <Compile Remove="Data\Migrations\20211210005426_migration10.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211210231941_migration10.cs" />
+    <Compile Remove="Data\Migrations\20211210231941_migration10.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211212104424_migration11.cs" />
+    <Compile Remove="Data\Migrations\20211212104424_migration11.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211216234332_migration12.cs" />
+    <Compile Remove="Data\Migrations\20211216234332_migration12.Designer.cs" />
+    <Compile Remove="Data\Migrations\20211216234821_migration12.cs" />
+    <Compile Remove="Data\Migrations\20211216234821_migration12.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Castle.Windsor" Version="5.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.20" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.20" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.20" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.20">
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.21" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.21">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

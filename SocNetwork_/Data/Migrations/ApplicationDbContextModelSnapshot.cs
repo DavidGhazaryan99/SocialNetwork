@@ -15,7 +15,7 @@ namespace SocNetwork_.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.20")
+                .HasAnnotation("ProductVersion", "3.1.21")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -225,6 +225,82 @@ namespace SocNetwork_.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SocNetwork_.Models.FriendRequest", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("RequestTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("friendFromId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("friendToId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("isConfirmed")
+                        .HasColumnType("bit");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("friendFromId");
+
+                    b.HasIndex("friendToId");
+
+                    b.ToTable("FriendsRequest");
+                });
+
+            modelBuilder.Entity("SocNetwork_.Models.Friends", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("friendUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("userId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("friendUserId");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("Friends");
+                });
+
+            modelBuilder.Entity("SocNetwork_.Models.UserPictures", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Picture")
+                        .HasColumnType("varchar(MAX)");
+
+                    b.Property<DateTime>("dateTimePost")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("textForPicture")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("UserPictures");
+                });
+
             modelBuilder.Entity("SocNetwork_.Models.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -235,7 +311,7 @@ namespace SocNetwork_.Data.Migrations
 
                     b.Property<string>("ProfilePicture")
                         .IsRequired()
-                        .HasColumnType("nvarchar(250)")
+                        .HasColumnType("varchar(MAX)")
                         .HasMaxLength(250);
 
                     b.Property<string>("firstName")
@@ -298,6 +374,35 @@ namespace SocNetwork_.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SocNetwork_.Models.FriendRequest", b =>
+                {
+                    b.HasOne("SocNetwork_.Models.ApplicationUser", "friendFrom")
+                        .WithMany("FriendsFrom")
+                        .HasForeignKey("friendFromId");
+
+                    b.HasOne("SocNetwork_.Models.ApplicationUser", "friendTo")
+                        .WithMany("FriendsTo")
+                        .HasForeignKey("friendToId");
+                });
+
+            modelBuilder.Entity("SocNetwork_.Models.Friends", b =>
+                {
+                    b.HasOne("SocNetwork_.Models.ApplicationUser", "friendUser")
+                        .WithMany()
+                        .HasForeignKey("friendUserId");
+
+                    b.HasOne("SocNetwork_.Models.ApplicationUser", "user")
+                        .WithMany()
+                        .HasForeignKey("userId");
+                });
+
+            modelBuilder.Entity("SocNetwork_.Models.UserPictures", b =>
+                {
+                    b.HasOne("SocNetwork_.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("UserPictures")
+                        .HasForeignKey("ApplicationUserId");
                 });
 #pragma warning restore 612, 618
         }

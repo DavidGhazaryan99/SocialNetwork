@@ -1,8 +1,304 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model SocNetwork_.ViewModels.PostViewModel
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+    /* Set black background color, white text and some padding */
+    footer {
+        background-color: #555;
+        color: white;
+        padding: 15px;
+    }
+</style>
+<style>
+    .panel-shadow {
+        box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px;
+    }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    .panel-white {
+        border: 1px solid #dddddd;
+    }
+
+        .panel-white .panel-heading {
+            color: #333;
+            background-color: #fff;
+            border-color: #ddd;
+        }
+
+        .panel-white .panel-footer {
+            background-color: #fff;
+            border-color: #ddd;
+        }
+
+    .post .post-heading {
+        height: 95px;
+        padding: 20px 15px;
+    }
+
+        .post .post-heading .avatar {
+            width: 60px;
+            height: 60px;
+            display: block;
+            margin-right: 15px;
+        }
+
+        .post .post-heading .meta .title {
+            margin-bottom: 0;
+        }
+
+            .post .post-heading .meta .title a {
+                color: black;
+            }
+
+                .post .post-heading .meta .title a:hover {
+                    color: #aaaaaa;
+                }
+
+        .post .post-heading .meta .time {
+            margin-top: 8px;
+            color: #999;
+        }
+
+    .post .post-image .image {
+        width: 100%;
+        height: auto;
+    }
+
+    .post .post-description {
+        padding: 15px;
+    }
+
+        .post .post-description p {
+            font-size: 14px;
+        }
+
+        .post .post-description .stats {
+            margin-top: 20px;
+        }
+
+            .post .post-description .stats .stat-item {
+                display: inline-block;
+                margin-right: 15px;
+            }
+
+                .post .post-description .stats .stat-item .icon {
+                    margin-right: 8px;
+                }
+
+    .post .post-footer {
+        border-top: 1px solid #ddd;
+        padding: 15px;
+    }
+
+        .post .post-footer .input-group-addon a {
+            color: #454545;
+        }
+
+        .post .post-footer .comments-list {
+            padding: 0;
+            margin-top: 20px;
+            list-style-type: none;
+        }
+
+            .post .post-footer .comments-list .comment {
+                display: block;
+                width: 100%;
+                margin: 20px 0;
+            }
+
+                .post .post-footer .comments-list .comment .avatar {
+                    width: 35px;
+                    height: 35px;
+                }
+
+                .post .post-footer .comments-list .comment .comment-heading {
+                    display: block;
+                    width: 100%;
+                }
+
+                    .post .post-footer .comments-list .comment .comment-heading .user {
+                        font-size: 14px;
+                        font-weight: bold;
+                        display: inline;
+                        margin-top: 0;
+                        margin-right: 10px;
+                    }
+
+                    .post .post-footer .comments-list .comment .comment-heading .time {
+                        font-size: 12px;
+                        color: #aaa;
+                        margin-top: 0;
+                        display: inline;
+                    }
+
+                .post .post-footer .comments-list .comment .comment-body {
+                    margin-left: 50px;
+                }
+
+                .post .post-footer .comments-list .comment > .comments-list {
+                    margin-left: 50px;
+                }
+</style>
+@if (User.Identity.IsAuthenticated == false)
+{
+    <div class="text-left">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>
+}
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-sm-3 well">
+                <div class="well">
+                    <p>
+                        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">My Profile</a>
+                    </p>
+                    <img src="data:image/png;base64, @Model.profilePicture" class="img-circle" height="65" width="65" alt="Avatar">
+                    <p>
+                        @Model.firstName @Model.lastName
+                    </p>
+                </div>
+                <div class="well">
+                    <p><a href="#">Interests</a></p>
+                    <p>
+                        <span class="label label-default">News</span>
+                        <span class="label label-success">Labels</span>
+                        <span class="label label-info">Football</span>
+                        <span class="label label-warning">Gaming</span>
+                        <span class="label label-danger">Friends</span>
+                    </p>
+                </div>
+                <p><a asp-controller="Home" asp-action="Photos">Photos</a></p>
+                <p><a asp-controller="Home" asp-action="Chat">chat</a></p>
+                <p><a href="#">Link</a></p>
+                <p><a href="#">Link</a></p>
+            </div>
+            <div class="col-sm-7">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <form class="col-xs-12" method="post" action="/Home/Index" enctype="multipart/form-data">
+
+                            <input class="form-control" type="text" name="textForPost" placeholder="What's on your mind?">
+
+                            <div class="form-group">
+                                <input type="file" class="form-control" name="postFile" />
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary col-xs-12">Add</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                @foreach (var item in Model.post)
+                {
+                    <div class="container bootstrap snippets bootdey">
+                        <di class="col-md-8">
+                            <div class="col-sm-12">
+                                <div class="panel panel-white post panel-shadow">
+                                    <div class="post-heading">
+                                        <div class="pull-left image">
+                                            <img src="data:image/png;base64, @item.ApplicationUser.ProfilePicture" class="img-circle avatar" alt="user profile image">
+                                        </div>
+                                        <div class="pull-left meta">
+                                            <div class="title h5">
+                                                <h5> <input type="button" style="background-color:transparent" value="@item.ApplicationUser.firstName @item.ApplicationUser.lastName" onclick="location.href='@Url.Action("UserViewPage", "Search", new {id=@item.ApplicationUser.Id })'" /></h5>
+                                                uploaded a photo.
+                                            </div>
+                                            <h6 class="text-muted time">@item.dateTimePost</h6>
+                                        </div>
+                                    </div>
+                                    <div class="post-image">
+                                        <img src="data:image/png;base64, @item.Picture" class="image" alt="image post">
+                                    </div>
+                                    <div class="post-description">
+                                        <h4>Foto title</h4>
+                                        <p>@item.textForPicture</p>
+                                        <div class="stats">
+                                            <a href="#" class="btn btn-default stat-item">
+                                                <i class="fa fa-thumbs-up icon"></i>228
+                                            </a>
+                                            <a href="#" class="btn btn-default stat-item">
+                                                <i class="fa fa-share icon"></i>128
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="post-footer">
+                                        <div class="input-group">
+                                            <input class="form-control" placeholder="Add a comment" type="text">
+                                            <span class="input-group-addon">
+                                                <a href="#"><i class="fa fa-edit"></i></a>
+                                            </span>
+                                        </div>
+                                        <ul class="comments-list">
+                                            <li class="comment">
+                                                <a class="pull-left" href="#">
+                                                    <img class="avatar" src="https://bootdey.com/img/Content/user_3.jpg" alt="avatar">
+                                                </a>
+                                                <div class="comment-body">
+                                                    <div class="comment-heading">
+                                                        <h4 class="user">Full name 1</h4>
+                                                        <h5 class="time">7 minutes ago</h5>
+                                                    </div>
+                                                    <p>This is a comment bla bla bla</p>
+                                                </div>
+                                            </li>
+                                            <li class="comment">
+                                                <a class="pull-left" href="#">
+                                                    <img class="avatar" src="https://bootdey.com/img/Content/user_2.jpg" alt="avatar">
+                                                </a>
+                                                <div class="comment-body">
+                                                    <div class="comment-heading">
+                                                        <h4 class="user">Full name 2</h4>
+                                                        <h5 class="time">3 minutes ago</h5>
+                                                    </div>
+                                                    <p>This is another comment bla bla bla</p>
+                                                </div>
+                                            </li>
+                                            <li class="comment">
+                                                <a class="pull-left" href="#">
+                                                    <img class="avatar" src="https://bootdey.com/img/Content/user_3.jpg" alt="avatar">
+                                                </a>
+                                                <div class="comment-body">
+                                                    <div class="comment-heading">
+                                                        <h4 class="user">Full name 1</h4>
+                                                        <h5 class="time">10 seconds ago</h5>
+                                                    </div>
+                                                    <p>Wow! This is a comment</p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </di>
+                    </div>
+                }
+            </div>
+            <div class="col-sm-2 well">
+                <div class="thumbnail">
+                    <p>Upcoming Events:</p>
+                    <img src="https://www.voyagesdereve.ch/upload/images/Paris-Tour-Eiffel.jpg" alt="Paris" width="400" height="300">
+                    <p><strong>Paris</strong></p>
+                    <p>Fri. 27 November 2015</p>
+                    <button class="btn btn-primary">Info</button>
+                </div>
+                <div class="well">
+                    <p>ADS</p>
+                </div>
+                <div class="well">
+                    <p>ADS</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="container-fluid text-center">
+        <p>Footer Text</p>
+    </footer>
+}

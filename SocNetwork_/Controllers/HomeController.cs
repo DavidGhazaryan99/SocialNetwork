@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.V3.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SocNetwork_.Data;
 using SocNetwork_.Models;
+using SocNetwork_.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,25 +24,97 @@ namespace SocNetwork_.Controllers
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly ApplicationDbContext dbContext;
         private readonly IWebHostEnvironment webHostEnvironment;
-
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, ApplicationDbContext context, IWebHostEnvironment hostEnvironment, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
+            _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
             this.httpContextAccessor = httpContextAccessor;
             dbContext = context;
             webHostEnvironment = hostEnvironment;
         }
-        
-        public IActionResult Index()
+
+        public IActionResult Index(string textForPost, IFormFile postFile)
         {
             if (User.Identity.IsAuthenticated)
             {
-                ApplicationUser userHomeModel = new ApplicationUser();
-                userHomeModel.firstName = User.Identity.Name;
-                return View(userHomeModel);
+                var userId = _userManager.GetUserId(HttpContext.User);
+                ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
+                if (textForPost != null && postFile != null)
+                {
+                    UserPictures userPictures = new UserPictures()
+                    {
+                        textForPicture = textForPost,
+                        Picture = UploadedFile(postFile),
+                        ApplicationUser = user,
+                        dateTimePost=DateTime.Now
+                    };
+                    dbContext.UserPictures.Add(userPictures);
+                    dbContext.SaveChanges();
+                    _userManager.UpdateAsync(user);
+                    _signInManager.RefreshSignInAsync(user);
+                }
+                List<UserPictures> friendsPost = new List<UserPictures>();
+                user.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == userId).ToList();
+                friendsPost.AddRange(user.UserPictures);
+                List<Friends> friends = dbContext.Friends.Where(m => m.userId == user.Id).ToList();
+                foreach (var item in friends)
+                {
+                    ApplicationUser friendUser = _userManager.FindByIdAsync(item.friendUserId).Result;
+                    item.friendUser = friendUser;
+                    item.friendUser.UserPictures= dbContext.UserPictures.Where(m => m.ApplicationUserId == item.friendUserId).ToList();
+                }
+                foreach (var item in friends)
+                {
+                    friendsPost.AddRange(item.friendUser.UserPictures);
+                }
+                PostViewModel post = new PostViewModel()
+                {
+                    firstName = user.firstName,
+                    lastName = user.lastName,
+                    profilePicture = user.ProfilePicture,
+                    post = friendsPost
+                };
+                return View(post);
+            }
+            else
+                return View();
+        }
+        [HttpPost]
+        public IActionResult AddNews(IFormFile image)
+        {
+            ApplicationUser tbl_News = new ApplicationUser();
+            if (image != null)
+            {
+
+                //Set Key Name
+                string ImageName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+
+                //Get url To Save
+                string SavePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", ImageName);
+
+                using (var stream = new FileStream(SavePath, FileMode.Create))
+                {
+                    image.CopyTo(stream);
+                }
             }
             return View();
         }
+        public IActionResult Photos()
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
+            user.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == user.Id).ToList();
+            return View(user);
+        }
+
+        public IActionResult Chat()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -49,6 +124,23 @@ namespace SocNetwork_.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private string UploadedFile(IFormFile Picture)
+        {
+            var file = Picture;
+            if (file.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    string s = Convert.ToBase64String(fileBytes);
+                    // act on the Base64 data
+                    return s;
+                }
+            }
+            return null;
         }
     }
 }

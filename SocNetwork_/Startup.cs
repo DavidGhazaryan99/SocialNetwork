@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SocNetwork_.Data;
+using SocNetwork_.Hubs;
 using SocNetwork_.Models;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ namespace SocNetwork_
               .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,7 +66,12 @@ namespace SocNetwork_
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapRazorPages();
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
         }
     }

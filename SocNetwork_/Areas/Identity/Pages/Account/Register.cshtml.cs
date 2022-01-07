@@ -93,7 +93,6 @@ namespace SocNetwork_.Areas.Identity.Pages.Account
        
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            var da =Input.ProfilePicture;
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)

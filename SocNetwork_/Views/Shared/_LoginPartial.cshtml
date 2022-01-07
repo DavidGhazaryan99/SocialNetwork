@@ -1,26 +1,56 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-<ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <a class="nav-link" asp-area="" asp-controller="Search" asp-action="Index" title="Search">
+                <img src="https://cdn-icons.flaticon.com/png/512/2076/premium/2076197.png?token=exp=1640131678~hmac=3dee829c37b52d9a49669394bcfee26c" alt="Search"
+                     height="30" width="30" />
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" asp-area="" asp-controller="Chat" asp-action="Index" title="Chat">
+                <img src="https://cdn-icons-png.flaticon.com/512/3721/3721843.png" alt="Chat"
+                     height="30" width="30" />
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" asp-area="" asp-controller="Friend" asp-action="Index" title="Friends">
+                <img src="https://cdn-icons-png.flaticon.com/512/880/880594.png" alt="Girl in a jacket"
+                     height="30" width="30" />
+            </a>
+        </li>
+
+        <li>
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                <img src="data:image/png;base64,@UserManager.GetUserAsync(User).Result.ProfilePicture" alt="Red dot"
+                     class="rounded-circle"
+                     height="30" width="30" />
+                @User.Identity.Name!
+            </a>
+        </li>
+
+        <li>
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+    </ul>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    </ul>
 }
-</ul>

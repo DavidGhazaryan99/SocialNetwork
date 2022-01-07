@@ -1,0 +1,156 @@
+﻿@model SocNetwork_.ViewModels.SearchPageViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+    body {
+        font-family: Arial;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    form.example input[type=text] {
+        padding: 10px;
+        font-size: 17px;
+        border: 1px solid grey;
+        float: left;
+        width: 80%;
+        background: #f1f1f1;
+    }
+
+    form.example button {
+        float: left;
+        width: 20%;
+        padding: 10px;
+        background: #2196F3;
+        color: white;
+        font-size: 17px;
+        border: 1px solid grey;
+        border-left: none;
+        cursor: pointer;
+    }
+
+        form.example button:hover {
+            background: #0b7dda;
+        }
+
+    form.example::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+<style>
+    body {
+        margin-top: 20px;
+        background: #FAFAFA;
+    }
+    /*==================================================
+    Nearby People CSS
+    ==================================================*/
+
+    .people-nearby .google-maps {
+        background: #f8f8f8;
+        border-radius: 4px;
+        border: 1px solid #f1f2f2;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+        .people-nearby .google-maps .map {
+            height: 300px;
+            width: 100%;
+            border: none;
+        }
+
+    .people-nearby .nearby-user {
+        padding: 20px 0;
+        border-top: 1px solid #f1f2f2;
+        border-bottom: 1px solid #f1f2f2;
+        margin-bottom: 20px;
+    }
+
+    img.profile-photo-lg {
+        height: 80px;
+        width: 80px;
+        border-radius: 50%;
+    }
+</style>
+<div class="container text-center">
+    <div class="row">
+        <div class="col-sm-3 well">
+            <div class="well">
+                @if (Model.Friends != null)
+                {
+                    @foreach (var item in Model.Friends)
+                    {
+                        <h3>Friend Request</h3>
+                        <div class="w3-container w3-center">
+
+                            <img src="data:image/png;base64,@item.friendFrom.ProfilePicture" alt="Avatar" style="width:80%">
+                            <h5>@item.friendFrom.firstName @item.friendFrom.lastName</h5>
+                            <h6>@item.RequestTime</h6>
+                            <div class="w3-section">
+                                <input type="button" value="Accept" onclick="location.href='@Url.Action("Accept", "Search", new { id = @item.friendFrom.Id })'" />
+                                <input type="button" value="Decline" onclick="location.href='@Url.Action("Decline", "Search", new { id = @item.friendFrom.Id })'" />
+                            </div>
+                        </div>
+                    }
+                }
+                @if (Model.Friends.Count == 0)
+                {
+                    <h3>Friendship requests will be shown here</h3>
+                }
+            </div>
+        </div>
+
+        <div class="col-sm-7">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-default text-left">
+                        <div class="panel-body">
+                            <form class="example">
+                                <input type="text" placeholder="Search.." name="UserInputName" id="UserInputName">
+                                <button asp-action="Search" type="submit"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model != null)
+            {
+                @foreach (var item in Model.Users)
+                {
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="people-nearby">
+                                    <div class="nearby-user">
+                                        <div class="row">
+                                            <div class="col-md-2 col-sm-2">
+                                                <img src="data:image/png;base64, @item.ProfilePicture" alt="Red dot" class="profile-photo-lg">
+                                            </div>
+                                            <div class="col-md-7 col-sm-7">
+                                                <h5> <input type="button" style="background-color:transparent" value="@item.firstName @item.lastName" onclick="location.href='@Url.Action("UserViewPage", "Search", new {id=@item.Id })'" /></h5>
+                                                <p>Software Engineer</p>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3">
+                                                <input type="button" value="Add Friend" onclick="location.href='@Url.Action("AddFriend", "Search", new {id=@item.Id })'" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
