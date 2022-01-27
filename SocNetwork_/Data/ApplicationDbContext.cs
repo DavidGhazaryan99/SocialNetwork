@@ -30,6 +30,14 @@ namespace SocNetwork_.Data
                 .HasMaxLength(250);
 
             modelBuilder.Entity<ApplicationUser>()
+                .Property(e => e.Address)
+                .HasMaxLength(250);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(e => e.Gender)
+                .HasMaxLength(250);
+
+            modelBuilder.Entity<ApplicationUser>()
                 .Property(e => e.ProfilePicture)
                 .HasMaxLength(250);
 
@@ -56,6 +64,8 @@ namespace SocNetwork_.Data
         public DbSet<UserPictures> UserPictures { get; set; }
         public DbSet<FriendRequest> FriendsRequest { get; set; }
         public DbSet<Friends> Friends { get; set; }
+        public DbSet<LikedUsers> LikedUsers { get; set; }
+        public DbSet<CommentingUsers> CommentingUsers { get; set; }
 
     }
 }

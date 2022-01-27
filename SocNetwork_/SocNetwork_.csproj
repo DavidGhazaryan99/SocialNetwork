@@ -37,10 +37,17 @@
     <Compile Remove="Data\Migrations\20211216234332_migration12.Designer.cs" />
     <Compile Remove="Data\Migrations\20211216234821_migration12.cs" />
     <Compile Remove="Data\Migrations\20211216234821_migration12.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220120071517_migration14.cs" />
+    <Compile Remove="Data\Migrations\20220120071517_migration14.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220120072547_migration14.cs" />
+    <Compile Remove="Data\Migrations\20220120072547_migration14.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220120084954_migration20.cs" />
+    <Compile Remove="Data\Migrations\20220120084954_migration20.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Castle.Windsor" Version="5.1.1" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.21" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.21" />

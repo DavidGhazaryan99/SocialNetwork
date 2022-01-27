@@ -36,8 +36,6 @@ namespace SocNetwork_.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
 
-            [BindProperty]
-            [Required(ErrorMessage = "Please choose profile image")]
             [Display(Name = "Profile Picture")]
             public IFormFile NewProfilePicture { get; set; }
 
@@ -54,6 +52,16 @@ namespace SocNetwork_.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 
+            [Display(Name = "Address")]
+            public string Address { get; set; }
+
+            [Display(Name = "Male")]
+
+            public bool GenderMale { get; set; }
+            [Display(Name = "Female")]
+
+            public bool GenderFemale { get; set; }
+
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -64,11 +72,13 @@ namespace SocNetwork_.Areas.Identity.Pages.Account.Manage
             var lastName = user.lastName;
             var dateOfBirth = user.DateOfBirth;
             OldProfilePicture = user.ProfilePicture;
+            var address = user.Address;
 
             Username = userName;
 
             Input = new InputModel
             {
+                Address=address,
                 FirstName = firstName,
                 LastName = lastName,
                 DateOfBirth = dateOfBirth,
@@ -113,16 +123,34 @@ namespace SocNetwork_.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            var oldProfilePicture = user.ProfilePicture;
-            if (UploadedFile(Input) != oldProfilePicture)
+            if (Input.NewProfilePicture != null)
             {
-                user.ProfilePicture = UploadedFile(Input);
+                var oldProfilePicture = user.ProfilePicture;
+                if (UploadedFile(Input) != oldProfilePicture)
+                {
+                    user.ProfilePicture = UploadedFile(Input);
+                }
+            }
+
+            if (Input.GenderFemale == true)
+            {
+                user.Gender = "Female";
+            }
+            if (Input.GenderMale == true)
+            {
+                user.Gender = "Male";
             }
 
             var firstName = user.firstName;
             if (Input.FirstName != firstName)
             {
                 user.firstName = Input.FirstName;
+            }
+
+            var address = user.Address;
+            if (Input.Address != address)
+            {
+                user.Address = Input.Address;
             }
 
             var lastName = user.lastName;

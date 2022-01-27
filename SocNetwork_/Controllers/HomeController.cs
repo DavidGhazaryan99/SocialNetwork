@@ -49,7 +49,7 @@ namespace SocNetwork_.Controllers
                         textForPicture = textForPost,
                         Picture = UploadedFile(postFile),
                         ApplicationUser = user,
-                        dateTimePost=DateTime.Now
+                        dateTimePost = DateTime.Now
                     };
                     dbContext.UserPictures.Add(userPictures);
                     dbContext.SaveChanges();
@@ -60,22 +60,35 @@ namespace SocNetwork_.Controllers
                 user.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == userId).ToList();
                 friendsPost.AddRange(user.UserPictures);
                 List<Friends> friends = dbContext.Friends.Where(m => m.userId == user.Id).ToList();
+
                 foreach (var item in friends)
                 {
                     ApplicationUser friendUser = _userManager.FindByIdAsync(item.friendUserId).Result;
                     item.friendUser = friendUser;
-                    item.friendUser.UserPictures= dbContext.UserPictures.Where(m => m.ApplicationUserId == item.friendUserId).ToList();
+                    item.friendUser.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == item.friendUserId).ToList();
                 }
+
                 foreach (var item in friends)
                 {
                     friendsPost.AddRange(item.friendUser.UserPictures);
                 }
+
+                foreach (var item in friendsPost)
+                {
+                    item.LikedUsers = dbContext.LikedUsers.Where(m => m.UserPictureId == item.id).ToList();
+                    item.CommentingUsers = dbContext.CommentingUsers.Where(m => m.UserPictureId == item.id).ToList();
+                    List<LikedUsers> likedCountUsers = dbContext.LikedUsers.Where(m => m.UserPictureId == item.id).ToList();
+                }
+
+                var friendsPostsOrder = friendsPost.OrderBy(s => s.dateTimePost).ToList();
+
                 PostViewModel post = new PostViewModel()
                 {
+                    id = user.Id,
                     firstName = user.firstName,
                     lastName = user.lastName,
                     profilePicture = user.ProfilePicture,
-                    post = friendsPost
+                    post = friendsPostsOrder,
                 };
                 return View(post);
             }
@@ -102,6 +115,8 @@ namespace SocNetwork_.Controllers
             }
             return View();
         }
+
+
         public IActionResult Photos()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -109,6 +124,50 @@ namespace SocNetwork_.Controllers
             user.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == user.Id).ToList();
             return View(user);
         }
+
+
+        public async Task<IActionResult> AddLike(int id)
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
+            UserPictures userPicture = dbContext.UserPictures.Where(m => m.id == id).First();
+            LikedUsers likedUser = new LikedUsers()
+            {
+                DateTime = DateTime.Now,
+                LikedUser = user,
+                LikedUserId = user.Id,
+                UserPictureId = id,
+                UserPictures=userPicture,
+                ApplicationUserId = userPicture.ApplicationUserId,
+            };
+            dbContext.LikedUsers.Add(likedUser);
+            dbContext.SaveChanges();
+            await _userManager.UpdateAsync(user);
+            await _signInManager.RefreshSignInAsync(user);
+            return LocalRedirect("~/Home"); ;
+        }
+        public async Task<IActionResult> AddComment(int id,string comment)
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
+            UserPictures userPicture = dbContext.UserPictures.Where(m => m.id == id).First();
+            CommentingUsers commentingUser = new CommentingUsers()
+            {
+                DateTime = DateTime.Now,
+                CommentingUser = user,
+                CommentingUserId = user.Id,
+                UserPictureId = id,
+                UserPictures = userPicture,
+                Comment = comment,
+                ApplicationUserId = userPicture.ApplicationUserId,
+            };
+            dbContext.CommentingUsers.Add(commentingUser);
+            dbContext.SaveChanges();
+            await _userManager.UpdateAsync(user);
+            await _signInManager.RefreshSignInAsync(user);
+            return LocalRedirect("~/Home"); ;
+        }
+
 
         public IActionResult Chat()
         {

@@ -6,10 +6,8 @@ using Microsoft.Extensions.Logging;
 using SocNetwork_.Data;
 using SocNetwork_.Models;
 using SocNetwork_.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SocNetwork_.Controllers
 {
@@ -79,7 +77,7 @@ namespace SocNetwork_.Controllers
                         {
                             User = user,
                         };
-                        return View("Index",model);
+                        return View("Index", model);
                     }
                 }
                 FriendsViewModel model1 = new FriendsViewModel()
@@ -94,8 +92,43 @@ namespace SocNetwork_.Controllers
                 User = user,
                 Friends = friends
             };
-            return View("Index",model2);
+            return View("Index", model2);
         }
+
+        public ActionResult DeleteFriend(string id)
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
+            ApplicationUser friendUser = _userManager.FindByIdAsync(id).Result;
+            Friends deleteFriend = new Friends()
+            {
+                user = user,
+                userId = userId,
+                friendUser = friendUser,
+                friendUserId = id
+            };
+            Friends deleteFriend2 = new Friends()
+            {
+                user = friendUser,
+                userId = id,
+                friendUser = user,
+                friendUserId = userId
+            };
+            foreach (var item in dbContext.Friends)
+            {
+                if (item.userId == deleteFriend.userId && item.friendUserId == deleteFriend.friendUserId)
+                {
+                    dbContext.Friends.Remove(item);
+                }
+                if (item.userId == deleteFriend2.userId && item.friendUserId == deleteFriend2.friendUserId)
+                {
+                    dbContext.Friends.Remove(item);
+                }
+            }
+            dbContext.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
         // GET: FriendController/Details/5
         public ActionResult Details(int id)
         {

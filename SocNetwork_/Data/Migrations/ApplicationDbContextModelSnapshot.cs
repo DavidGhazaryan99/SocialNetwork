@@ -225,6 +225,40 @@ namespace SocNetwork_.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SocNetwork_.Models.CommentingUsers", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CommentingUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserPictureId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserPicturesid")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("CommentingUserId");
+
+                    b.HasIndex("UserPicturesid");
+
+                    b.ToTable("CommentingUsers");
+                });
+
             modelBuilder.Entity("SocNetwork_.Models.FriendRequest", b =>
                 {
                     b.Property<int>("id")
@@ -275,6 +309,37 @@ namespace SocNetwork_.Data.Migrations
                     b.ToTable("Friends");
                 });
 
+            modelBuilder.Entity("SocNetwork_.Models.LikedUsers", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LikedUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("UserPictureId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserPicturesid")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("LikedUserId");
+
+                    b.HasIndex("UserPicturesid");
+
+                    b.ToTable("LikedUsers");
+                });
+
             modelBuilder.Entity("SocNetwork_.Models.UserPictures", b =>
                 {
                     b.Property<int>("id")
@@ -305,8 +370,16 @@ namespace SocNetwork_.Data.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(250)")
+                        .HasMaxLength(250);
+
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2")
+                        .HasMaxLength(250);
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(250)")
                         .HasMaxLength(250);
 
                     b.Property<string>("ProfilePicture")
@@ -376,6 +449,17 @@ namespace SocNetwork_.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SocNetwork_.Models.CommentingUsers", b =>
+                {
+                    b.HasOne("SocNetwork_.Models.ApplicationUser", "CommentingUser")
+                        .WithMany()
+                        .HasForeignKey("CommentingUserId");
+
+                    b.HasOne("SocNetwork_.Models.UserPictures", "UserPictures")
+                        .WithMany("CommentingUsers")
+                        .HasForeignKey("UserPicturesid");
+                });
+
             modelBuilder.Entity("SocNetwork_.Models.FriendRequest", b =>
                 {
                     b.HasOne("SocNetwork_.Models.ApplicationUser", "friendFrom")
@@ -396,6 +480,17 @@ namespace SocNetwork_.Data.Migrations
                     b.HasOne("SocNetwork_.Models.ApplicationUser", "user")
                         .WithMany()
                         .HasForeignKey("userId");
+                });
+
+            modelBuilder.Entity("SocNetwork_.Models.LikedUsers", b =>
+                {
+                    b.HasOne("SocNetwork_.Models.ApplicationUser", "LikedUser")
+                        .WithMany()
+                        .HasForeignKey("LikedUserId");
+
+                    b.HasOne("SocNetwork_.Models.UserPictures", "UserPictures")
+                        .WithMany("LikedUsers")
+                        .HasForeignKey("UserPicturesid");
                 });
 
             modelBuilder.Entity("SocNetwork_.Models.UserPictures", b =>

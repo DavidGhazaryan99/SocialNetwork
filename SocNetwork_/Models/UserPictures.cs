@@ -13,6 +13,8 @@ namespace SocNetwork_.Models
         [Column(TypeName = "varchar(MAX)")]
         public string Picture { get; set; }
         public string textForPicture { get; set; }
+        public List<LikedUsers> LikedUsers { get; set; }
+        public List<CommentingUsers> CommentingUsers { get; set; }
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public DateTime dateTimePost { get; set; }

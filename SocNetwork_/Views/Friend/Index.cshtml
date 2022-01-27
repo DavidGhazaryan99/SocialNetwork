@@ -96,16 +96,6 @@
                     @Model.User.firstName @Model.User.lastName
                 </p>
             </div>
-            <div class="well">
-                <p><a href="#">Interests</a></p>
-                <p>
-                    <span class="label label-default">News</span>
-                    <span class="label label-success">Labels</span>
-                    <span class="label label-info">Football</span>
-                    <span class="label label-warning">Gaming</span>
-                    <span class="label label-danger">Friends</span>
-                </p>
-            </div>
             <p><a asp-controller="Home" asp-action="Photos">Photos</a></p>
             <p><a href="#">Link</a></p>
             <p><a href="#">Link</a></p>
@@ -137,8 +127,10 @@
                                                 <img src="data:image/png;base64, @item.friendUser.ProfilePicture" alt="Red dot" class="profile-photo-lg">
                                             </div>
                                             <div class="col-md-7 col-sm-7">
-                                                <h5> <input type="button" style="background-color:transparent" value="@item.friendUser.firstName @item.friendUser.lastName" onclick="location.href='@Url.Action("UserViewPage", "Search", new {id=@item.friendUser.Id })'" /></h5>
-                                                <p>Software Engineer</p>
+                                                <h5> <a style="color:blue" href='@Url.Action("UserViewPage", "Search", new {id=@item.friendUserId })'> @item.friendUser.firstName @item.friendUser.lastName </a> </h5>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3">
+                                                <input type="button"  value="delete" onclick="location.href='@Url.Action("DeleteFriend", "Friend", new {id=@item.friendUser.Id })'" />
                                             </div>
                                         </div>
                                     </div>

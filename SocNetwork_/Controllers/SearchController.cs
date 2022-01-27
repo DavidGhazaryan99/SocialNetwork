@@ -159,6 +159,14 @@ namespace SocNetwork_.Controllers
                 user = user,
                 userId = userId,
             };
+
+            Friends newFriendTo = new Friends()
+            {
+                friendUser = user,
+                friendUserId = userId,
+                user = friendUser,
+                userId = id,
+            };
             foreach (var item in dbContext.FriendsRequest)
             {
                 if (item.friendFromId == id)
@@ -167,6 +175,7 @@ namespace SocNetwork_.Controllers
                 }
             }
             dbContext.Friends.Add(newFriend);
+            dbContext.Friends.Add(newFriendTo);
             dbContext.SaveChanges();
             await _userManager.UpdateAsync(user);
             await _signInManager.RefreshSignInAsync(user);
@@ -187,7 +196,19 @@ namespace SocNetwork_.Controllers
         public IActionResult UserViewPage(string id)
         {
             ApplicationUser user = _userManager.FindByIdAsync(id).Result;
-            return View(user);
+            List<Friends> friends = dbContext.Friends.Where(m => m.userId == user.Id).ToList();
+            user.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == user.Id).ToList();
+            foreach (var item in friends)
+            {
+                ApplicationUser friendUser = _userManager.FindByIdAsync(item.friendUserId).Result;
+                item.friendUser = friendUser;
+            }
+            FriendsViewModel model = new FriendsViewModel()
+            {
+                Friends = friends,
+                User = user
+            };
+            return View(model);
         }
         // GET: SearchController/Details/5
         public ActionResult Details(int id)

@@ -356,3 +356,5 @@ C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\bin\Debug
 C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\obj\Debug\netcoreapp3.1\Razor\Views\Search\UserViewPage.cshtml.g.cs
 C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\bin\Debug\netcoreapp3.1\libman.json
 C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\obj\Debug\netcoreapp3.1\Razor\Views\Chat\Index.cshtml.g.cs
+C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\bin\Debug\netcoreapp3.1\DocumentFormat.OpenXml.dll
+C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\bin\Debug\netcoreapp3.1\System.IO.Packaging.dll

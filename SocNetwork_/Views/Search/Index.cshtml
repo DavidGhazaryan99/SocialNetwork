@@ -94,7 +94,7 @@
                         <div class="w3-container w3-center">
 
                             <img src="data:image/png;base64,@item.friendFrom.ProfilePicture" alt="Avatar" style="width:80%">
-                            <h5>@item.friendFrom.firstName @item.friendFrom.lastName</h5>
+                            <h5><a style="color:blue" href='@Url.Action("UserViewPage", "Search", new {id=@item.friendFromId })'> @item.friendFrom.firstName @item.friendFrom.lastName </a> </h5>
                             <h6>@item.RequestTime</h6>
                             <div class="w3-section">
                                 <input type="button" value="Accept" onclick="location.href='@Url.Action("Accept", "Search", new { id = @item.friendFrom.Id })'" />
@@ -137,7 +137,7 @@
                                                 <img src="data:image/png;base64, @item.ProfilePicture" alt="Red dot" class="profile-photo-lg">
                                             </div>
                                             <div class="col-md-7 col-sm-7">
-                                                <h5> <input type="button" style="background-color:transparent" value="@item.firstName @item.lastName" onclick="location.href='@Url.Action("UserViewPage", "Search", new {id=@item.Id })'" /></h5>
+                                                <h5> <a style="color:blue" href='@Url.Action("UserViewPage", "Search", new {id=@item.Id })'> @item.firstName @item.lastName </a> </h5>
                                                 <p>Software Engineer</p>
                                             </div>
                                             <div class="col-md-3 col-sm-3">

@@ -14,6 +14,8 @@ namespace SocNetwork_.Models
         public string firstName { get; set; }
         public string lastName { get; set; }
         public DateTime DateOfBirth { get; set; }
+        public string Gender { get; set; }
+        public string Address { get;set; }
         [Required(ErrorMessage = "Please choose profile image")]
         [Column(TypeName = "varchar(MAX)")]
         public string ProfilePicture { get; set; }

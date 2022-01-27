@@ -9,6 +9,7 @@ namespace SocNetwork_.ViewModels
 {
     public class PostViewModel
     {
+        public string id { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string profilePicture { get; set; }

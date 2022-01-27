@@ -1,4 +1,4 @@
-﻿@model SocNetwork_.Models.ApplicationUser
+﻿@model SocNetwork_.ViewModels.FriendsViewModel
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -503,14 +503,143 @@
         list-style: none
     }
 </style>
+<style>
+    .panel-shadow {
+        box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px;
+    }
+
+    .panel-white {
+        border: 1px solid #dddddd;
+    }
+
+        .panel-white .panel-heading {
+            color: #333;
+            background-color: #fff;
+            border-color: #ddd;
+        }
+
+        .panel-white .panel-footer {
+            background-color: #fff;
+            border-color: #ddd;
+        }
+
+    .post .post-heading {
+        height: 95px;
+        padding: 20px 15px;
+    }
+
+        .post .post-heading .avatar {
+            width: 60px;
+            height: 60px;
+            display: block;
+            margin-right: 15px;
+        }
+
+        .post .post-heading .meta .title {
+            margin-bottom: 0;
+        }
+
+            .post .post-heading .meta .title a {
+                color: black;
+            }
+
+                .post .post-heading .meta .title a:hover {
+                    color: #aaaaaa;
+                }
+
+        .post .post-heading .meta .time {
+            margin-top: 8px;
+            color: #999;
+        }
+
+    .post .post-image .image {
+        width: 100%;
+        height: auto;
+    }
+
+    .post .post-description {
+        padding: 15px;
+    }
+
+        .post .post-description p {
+            font-size: 14px;
+        }
+
+        .post .post-description .stats {
+            margin-top: 20px;
+        }
+
+            .post .post-description .stats .stat-item {
+                display: inline-block;
+                margin-right: 15px;
+            }
+
+                .post .post-description .stats .stat-item .icon {
+                    margin-right: 8px;
+                }
+
+    .post .post-footer {
+        border-top: 1px solid #ddd;
+        padding: 15px;
+    }
+
+        .post .post-footer .input-group-addon a {
+            color: #454545;
+        }
+
+        .post .post-footer .comments-list {
+            padding: 0;
+            margin-top: 20px;
+            list-style-type: none;
+        }
+
+            .post .post-footer .comments-list .comment {
+                display: block;
+                width: 100%;
+                margin: 20px 0;
+            }
+
+                .post .post-footer .comments-list .comment .avatar {
+                    width: 35px;
+                    height: 35px;
+                }
+
+                .post .post-footer .comments-list .comment .comment-heading {
+                    display: block;
+                    width: 100%;
+                }
+
+                    .post .post-footer .comments-list .comment .comment-heading .user {
+                        font-size: 14px;
+                        font-weight: bold;
+                        display: inline;
+                        margin-top: 0;
+                        margin-right: 10px;
+                    }
+
+                    .post .post-footer .comments-list .comment .comment-heading .time {
+                        font-size: 12px;
+                        color: #aaa;
+                        margin-top: 0;
+                        display: inline;
+                    }
+
+                .post .post-footer .comments-list .comment .comment-body {
+                    margin-left: 50px;
+                }
+
+                .post .post-footer .comments-list .comment > .comments-list {
+                    margin-left: 50px;
+                }
+</style>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <section class="container ng-scope ng-fadeInLeftShort" style="">
     <!-- uiView:  --><div class="ng-fadeInLeftShort ng-scope" style="">
         <div class="container-overlap bg-blue-500 ng-scope">
             <div class="media m0 pv">
-                <div class="media-left"><a href="#"><img src="data:image/png;base64,@Model.ProfilePicture" alt="User" class="media-object img-circle thumb64"></a></div>
+                <div class="media-left"><a href="#"><img src="data:image/png;base64,@Model.User.ProfilePicture" alt="User" class="media-object img-circle thumb64"></a></div>
                 <div class="media-body media-middle">
-                    <h4 class="media-heading text-white">@Model.firstName @Model.lastName</h4>
+                    <h4 class="media-heading text-white">@Model.User.firstName @Model.User.lastName</h4>
                 </div>
             </div>
         </div>
@@ -532,36 +661,91 @@
                                     <button type="submit" class="btn-raised btn btn-success btn-circle btn-lg ng-hide"><em class="fa fa-check"></em></button>
                                 </div>
                             </div>*@
-                        <h5 class="card-heading pb0">Contact Information</h5>
                         <div class="card-body">
-                            <table class="table table-striped">
-                                <tbody>
-                                    <tr>
-                                        <td><em class="ion-document-text icon-fw mr"></em>Area</td>
-                                        <td class="ng-binding"> null</td>
-                                    </tr>
-                                    <tr>
-                                        <td><em class="ion-egg icon-fw mr"></em>Birthday</td>
-                                        <td><span class="ng-scope ng-binding editable">@Model.DateOfBirth</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><em class="ion-man icon-fw mr"></em>Gender</td>
-                                        <td><span class="ng-scope ng-binding editable">null</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><em class="ion-android-home icon-fw mr"></em>Address</td>
-                                        <td><span class="ng-scope ng-binding editable">null</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><em class="ion-email icon-fw mr"></em>Email</td>
-                                        <td><span class="ng-scope editable"><a href="" class="ng-binding">@Model.Email</a></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><em class="ion-ios-telephone icon-fw mr"></em>Contact phone</td>
-                                        <td><span class="ng-scope ng-binding editable">@Model.PhoneNumber</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            @foreach (var item in Model.User.UserPictures)
+                            {
+                                <div class="container bootstrap snippets bootdey">
+                                    <div class="col-md-8">
+                                        <div class="col-sm-12">
+                                            <div class="panel panel-white post panel-shadow">
+                                                <div class="post-heading">
+                                                    <div class="pull-left image">
+                                                        <img src="data:image/png;base64, @item.ApplicationUser.ProfilePicture" class="img-circle avatar" alt="user profile image">
+                                                    </div>
+                                                    <div class="pull-left meta">
+                                                        <div class="title h5">
+                                                            <h5> <input type="button" style="background-color:transparent" value="@item.ApplicationUser.firstName @item.ApplicationUser.lastName" onclick="location.href='@Url.Action("UserViewPage", "Search", new {id=@item.ApplicationUser.Id })'" /></h5>
+                                                            uploaded a photo.
+                                                        </div>
+                                                        <h6 class="text-muted time">@item.dateTimePost</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="post-image">
+                                                    <img src="data:image/png;base64, @item.Picture" class="image" alt="image post">
+                                                </div>
+                                                <div class="post-description">
+                                                    <h4>Foto title</h4>
+                                                    <p>@item.textForPicture</p>
+                                                    <div class="stats">
+                                                        <a href="#" class="btn btn-default stat-item">
+                                                            <i class="fa fa-thumbs-up icon"></i>228
+                                                        </a>
+                                                        <a href="#" class="btn btn-default stat-item">
+                                                            <i class="fa fa-share icon"></i>128
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="post-footer">
+                                                    <div class="input-group">
+                                                        <input class="form-control" placeholder="Add a comment" type="text">
+                                                        <span class="input-group-addon">
+                                                            <a href="#"><i class="fa fa-edit"></i></a>
+                                                        </span>
+                                                    </div>
+                                                    <ul class="comments-list">
+                                                        <li class="comment">
+                                                            <a class="pull-left" href="#">
+                                                                <img class="avatar" src="https://bootdey.com/img/Content/user_3.jpg" alt="avatar">
+                                                            </a>
+                                                            <div class="comment-body">
+                                                                <div class="comment-heading">
+                                                                    <h4 class="user">Full name 1</h4>
+                                                                    <h5 class="time">7 minutes ago</h5>
+                                                                </div>
+                                                                <p>This is a comment bla bla bla</p>
+                                                            </div>
+                                                        </li>
+                                                        <li class="comment">
+                                                            <a class="pull-left" href="#">
+                                                                <img class="avatar" src="https://bootdey.com/img/Content/user_2.jpg" alt="avatar">
+                                                            </a>
+                                                            <div class="comment-body">
+                                                                <div class="comment-heading">
+                                                                    <h4 class="user">Full name 2</h4>
+                                                                    <h5 class="time">3 minutes ago</h5>
+                                                                </div>
+                                                                <p>This is another comment bla bla bla</p>
+                                                            </div>
+                                                        </li>
+                                                        <li class="comment">
+                                                            <a class="pull-left" href="#">
+                                                                <img class="avatar" src="https://bootdey.com/img/Content/user_3.jpg" alt="avatar">
+                                                            </a>
+                                                            <div class="comment-body">
+                                                                <div class="comment-heading">
+                                                                    <h4 class="user">Full name 1</h4>
+                                                                    <h5 class="time">10 seconds ago</h5>
+                                                                </div>
+                                                                <p>Wow! This is a comment</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
                         <div class="card-divider"></div>
                     </form>
@@ -569,104 +753,142 @@
                 <!-- Right column-->
                 <div class="col-md-5 col-lg-4">
                     <div class="card">
-                        <h5 class="card-heading">
-                            Contacts
-                        </h5>
-                        <div class="mda-list">
-                            <div class="mda-list-item">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="List user" class="mda-list-item-img">
-                                <div class="mda-list-item-text mda-2-line">
-                                    <h3><a href="#">Eric Graves</a></h3>
-                                    <div class="text-muted text-ellipsis">Ut ac nisi id mauris</div>
-                                </div>
-                            </div>
-                            <div class="mda-list-item">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="List user" class="mda-list-item-img">
-                                <div class="mda-list-item-text mda-2-line">
-                                    <h3><a href="#">Jessie Cox</a></h3>
-                                    <div class="text-muted text-ellipsis">Sed lacus nisl luctus</div>
-                                </div>
-                            </div>
-                            <div class="mda-list-item">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="List user" class="mda-list-item-img">
-                                <div class="mda-list-item-text mda-2-line">
-                                    <h3><a href="#">Marie Hall</a></h3>
-                                    <div class="text-muted text-ellipsis">Donec congue sagittis mi</div>
-                                </div>
-                            </div>
-                            <div class="mda-list-item">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar4.png" alt="List user" class="mda-list-item-img">
-                                <div class="mda-list-item-text mda-2-line">
-                                    <h3><a href="#">Guy Carpenter</a></h3>
-                                    <div class="text-muted text-ellipsis">Donec convallis arcu sit</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body pv0 text-right"><a href="" class="btn btn-flat btn-info">View all</a></div>
-                        <div class="card-divider"></div>
-                        <h5 class="card-heading">Activity</h5>
-                        <div class="card-body pb0">
-                            <p class="pull-left mr"><em class="ion-record text-info"></em></p>
-                            <div class="oh">
-                                <p><strong class="mr-sm">Added</strong><span class="mr-sm">a new issue</span><a href="">#5478</a></p>
-                                <div class="clearfix">
-                                    <div class="pull-left text-muted"><em class="ion-android-time mr-sm"></em><span>an hour ago</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body pb0">
-                            <p class="pull-left mr"><em class="ion-record text-danger"></em></p>
-                            <div class="oh">
-                                <p><strong class="mr-sm">Commented</strong><span class="mr-sm"> on the project</span><a href="">Material</a></p>
-                                <p class="bl pl"><i>That's awesome!</i></p>
-                                <div class="clearfix">
-                                    <div class="pull-left text-muted"><em class="ion-android-time mr-sm"></em><span>2 hours ago</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body pb0">
-                            <p class="pull-left mr"><em class="ion-record text-success"></em></p>
-                            <div class="oh">
-                                <p><strong class="mr-sm">Completed</strong><span> all tasks asigned this week</span></p>
-                                <div class="clearfix">
-                                    <div class="pull-left text-muted"><em class="ion-android-time mr-sm"></em><span>3 hours ago</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body pb0">
-                            <p class="pull-left mr"><em class="ion-record text-info"></em></p>
-                            <div class="oh">
-                                <p><strong class="mr-sm">Published</strong><span class="mr-sm"> new photos on the album</span><a href="">WorldTrip</a></p>
-                                <p>
-                                    <a href=""><img src="https://via.placeholder.com/200x200" alt="Pic" class="mr-sm thumb48"></a>
-                                    <a href=""><img src="https://via.placeholder.com/200x200" alt="Pic" class="mr-sm thumb48"></a>
-                                    <a href=""><img src="https://via.placeholder.com/200x200" alt="Pic" class="mr-sm thumb48"></a>
-                                </p>
-                                <div class="clearfix">
-                                    <div class="pull-left text-muted"><em class="ion-android-time mr-sm"></em><span>4 hours ago</span></div>
-                                </div>
-                            </div>
-                        </div>
+
+                        <h5 class="card-heading pb0">Contact Information</h5>
                         <div class="card-body">
-                            <div class="clearfix">
-                                <p class="pull-left mr"><em class="ion-record text-primary"></em></p>
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td><em class="ion-egg icon-fw mr"></em>Birthday</td>
+                                        <td><span class="ng-scope ng-binding editable">@Model.User.DateOfBirth</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><em class="ion-man icon-fw mr"></em>Gender</td>
+                                        <td><span class="ng-scope ng-binding editable">@Model.User.Gender</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><em class="ion-android-home icon-fw mr"></em>Address</td>
+                                        <td><span class="ng-scope ng-binding editable">@Model.User.Address</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><em class="ion-email icon-fw mr"></em>Email</td>
+                                        <td><span class="ng-scope editable"><a href="" class="ng-binding">@Model.User.Email</a></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><em class="ion-ios-telephone icon-fw mr"></em>Contact phone</td>
+                                        <td><span class="ng-scope ng-binding editable">@Model.User.PhoneNumber</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-divider"></div>
+
+                    </div>
+                    <div class="card">
+
+                        <h5 class="card-heading">
+                            Friends
+                        </h5>
+
+                        @if (Model.Friends != null)
+                        {
+                            if (Model.Friends.Count <= 5)
+                            {
+                                @for (int i = 0; i < Model.Friends.Count; i++)
+                                {
+                                    <div class="mda-list">
+                                        <div class="mda-list-item">
+                                            <img src="data:image/png;base64, @Model.Friends[i].friendUser.ProfilePicture" alt="List user" class="mda-list-item-img">
+                                            <div class="mda-list-item-text mda-2-line">
+                                                <h3><a href="#">@Model.Friends[i].friendUser.firstName @Model.Friends[i].friendUser.lastName </a></h3>
+                                                <div class="text-muted text-ellipsis">Ut ac nisi id mauris</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                foreach (var item in Model.Friends)
+                                {
+                                    <div class="mda-list">
+                                        <div class="mda-list-item">
+                                            <img src="data:image/png;base64, @item.friendUser.ProfilePicture" alt="List user" class="mda-list-item-img">
+                                            <div class="mda-list-item-text mda-2-line">
+                                                <h3><a href="#">@item.friendUser.firstName @item.friendUser.lastName</a></h3>
+                                                <div class="text-muted text-ellipsis">Ut ac nisi id mauris</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+
+                        <div class="card-body pv0 text-right"><a href="" class="btn btn-flat btn-info">View all</a></div>
+                        @*<div class="card-divider"></div>
+                            <h5 class="card-heading">Activity</h5>
+                            <div class="card-body pb0">
+                                <p class="pull-left mr"><em class="ion-record text-info"></em></p>
                                 <div class="oh">
-                                    <p><strong class="mr-sm">Following</strong><span class="mr-sm">Jane Kuhn</span></p>
-                                    <p>
-                                        <span class="image-list">
-                                            <a href=""><img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="User" class="img-circle thumb32"></a>
-                                            <a href=""><img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="User" class="img-circle thumb32"></a>
-                                            <a href=""><img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="User" class="img-circle thumb32"></a>
-                                            <a href=""><img src="https://bootdey.com/img/Content/avatar/avatar4.png" alt="User" class="img-circle thumb32"></a>
-                                            <a href=""><img src="https://bootdey.com/img/Content/avatar/avatar5.png" alt="User" class="img-circle thumb32"></a><strong><a href="" class="ml-sm link-unstyled">+200</a></strong>
-                                        </span>
-                                    </p>
+                                    <p><strong class="mr-sm">Added</strong><span class="mr-sm">a new issue</span><a href="">#5478</a></p>
                                     <div class="clearfix">
-                                        <div class="pull-left text-muted"><em class="ion-android-time mr-sm"></em><span>yesterday</span></div>
+                                        <div class="pull-left text-muted"><em class="ion-android-time mr-sm"></em><span>an hour ago</span></div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="card-body pb0">
+                                <p class="pull-left mr"><em class="ion-record text-danger"></em></p>
+                                <div class="oh">
+                                    <p><strong class="mr-sm">Commented</strong><span class="mr-sm"> on the project</span><a href="">Material</a></p>
+                                    <p class="bl pl"><i>That's awesome!</i></p>
+                                    <div class="clearfix">
+                                        <div class="pull-left text-muted"><em class="ion-android-time mr-sm"></em><span>2 hours ago</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb0">
+                                <p class="pull-left mr"><em class="ion-record text-success"></em></p>
+                                <div class="oh">
+                                    <p><strong class="mr-sm">Completed</strong><span> all tasks asigned this week</span></p>
+                                    <div class="clearfix">
+                                        <div class="pull-left text-muted"><em class="ion-android-time mr-sm"></em><span>3 hours ago</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb0">
+                                <p class="pull-left mr"><em class="ion-record text-info"></em></p>
+                                <div class="oh">
+                                    <p><strong class="mr-sm">Published</strong><span class="mr-sm"> new photos on the album</span><a href="">WorldTrip</a></p>
+                                    <p>
+                                        <a href=""><img src="https://via.placeholder.com/200x200" alt="Pic" class="mr-sm thumb48"></a>
+                                        <a href=""><img src="https://via.placeholder.com/200x200" alt="Pic" class="mr-sm thumb48"></a>
+                                        <a href=""><img src="https://via.placeholder.com/200x200" alt="Pic" class="mr-sm thumb48"></a>
+                                    </p>
+                                    <div class="clearfix">
+                                        <div class="pull-left text-muted"><em class="ion-android-time mr-sm"></em><span>4 hours ago</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="clearfix">
+                                    <p class="pull-left mr"><em class="ion-record text-primary"></em></p>
+                                    <div class="oh">
+                                        <p><strong class="mr-sm">Following</strong><span class="mr-sm">Jane Kuhn</span></p>
+                                        <p>
+                                            <span class="image-list">
+                                                <a href=""><img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="User" class="img-circle thumb32"></a>
+                                                <a href=""><img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="User" class="img-circle thumb32"></a>
+                                                <a href=""><img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="User" class="img-circle thumb32"></a>
+                                                <a href=""><img src="https://bootdey.com/img/Content/avatar/avatar4.png" alt="User" class="img-circle thumb32"></a>
+                                                <a href=""><img src="https://bootdey.com/img/Content/avatar/avatar5.png" alt="User" class="img-circle thumb32"></a><strong><a href="" class="ml-sm link-unstyled">+200</a></strong>
+                                            </span>
+                                        </p>
+                                        <div class="clearfix">
+                                            <div class="pull-left text-muted"><em class="ion-android-time mr-sm"></em><span>yesterday</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
                     </div>
                 </div>
             </div>

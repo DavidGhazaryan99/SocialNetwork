@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "uXUa22FXNsP1s0n69eoRYZdbnCAWzurpEloq/KrJggfV/wMHyr3PMAfRcLPgDjIrQ+kPLmNiQDvqQ34hTb6GEw==",
+  "dgSpecHash": "fNZd3N7s5H7/+8Ttj07AqgJ3DIAMy8JKI37jBMVkxy0rJa+e6Qx120q/lbMSWS3GsxFhm0pl1bLkgx4q3ENWFA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Arus\\Documents\\GitHub\\SocialNetwork\\SocialNetwork\\SocNetwork_\\SocNetwork_.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Arus\\.nuget\\packages\\castle.core\\4.4.1\\castle.core.4.4.1.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\castle.windsor\\5.1.1\\castle.windsor.5.1.1.nupkg.sha512",
+    "C:\\Users\\Arus\\.nuget\\packages\\documentformat.openxml\\2.15.0\\documentformat.openxml.2.15.0.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.21\\microsoft.aspnetcore.cryptography.internal.3.1.21.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\3.1.21\\microsoft.aspnetcore.cryptography.keyderivation.3.1.21.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\3.1.11\\microsoft.aspnetcore.diagnostics.entityframeworkcore.3.1.11.nupkg.sha512",
@@ -124,6 +125,7 @@
     "C:\\Users\\Arus\\.nuget\\packages\\system.io.compression.zipfile\\4.3.0\\system.io.compression.zipfile.4.3.0.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\system.io.filesystem\\4.3.0\\system.io.filesystem.4.3.0.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\system.io.filesystem.primitives\\4.3.0\\system.io.filesystem.primitives.4.3.0.nupkg.sha512",
+    "C:\\Users\\Arus\\.nuget\\packages\\system.io.packaging\\4.7.0\\system.io.packaging.4.7.0.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\system.linq\\4.3.0\\system.linq.4.3.0.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\system.linq.expressions\\4.3.0\\system.linq.expressions.4.3.0.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
