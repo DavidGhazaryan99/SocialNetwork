@@ -66,6 +66,8 @@ namespace SocNetwork_.Data
         public DbSet<Friends> Friends { get; set; }
         public DbSet<LikedUsers> LikedUsers { get; set; }
         public DbSet<CommentingUsers> CommentingUsers { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
     }
 }

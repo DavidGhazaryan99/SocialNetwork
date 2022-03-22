@@ -259,6 +259,36 @@ namespace SocNetwork_.Data.Migrations
                     b.ToTable("CommentingUsers");
                 });
 
+            modelBuilder.Entity("SocNetwork_.Models.Conversation", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("When")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("receiver_id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("sender_id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("userIdentityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Conversations");
+                });
+
             modelBuilder.Entity("SocNetwork_.Models.FriendRequest", b =>
                 {
                     b.Property<int>("id")
@@ -338,6 +368,35 @@ namespace SocNetwork_.Data.Migrations
                     b.HasIndex("UserPicturesid");
 
                     b.ToTable("LikedUsers");
+                });
+
+            modelBuilder.Entity("SocNetwork_.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ReceiverId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("When")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("SocNetwork_.Models.UserPictures", b =>
@@ -491,6 +550,13 @@ namespace SocNetwork_.Data.Migrations
                     b.HasOne("SocNetwork_.Models.UserPictures", "UserPictures")
                         .WithMany("LikedUsers")
                         .HasForeignKey("UserPicturesid");
+                });
+
+            modelBuilder.Entity("SocNetwork_.Models.Message", b =>
+                {
+                    b.HasOne("SocNetwork_.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID");
                 });
 
             modelBuilder.Entity("SocNetwork_.Models.UserPictures", b =>

@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.V3.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SocNetwork_.Data;
 using SocNetwork_.Models;
@@ -49,7 +46,7 @@ namespace SocNetwork_.Controllers
                         textForPicture = textForPost,
                         Picture = UploadedFile(postFile),
                         ApplicationUser = user,
-                        dateTimePost = DateTime.Now
+                        dateTimePost = Convert.ToDateTime(DateTime.Now.ToString("dd'/'MM'/'yyyy HH:mm:ss"))
                     };
                     dbContext.UserPictures.Add(userPictures);
                     dbContext.SaveChanges();
@@ -77,19 +74,23 @@ namespace SocNetwork_.Controllers
                 {
                     item.LikedUsers = dbContext.LikedUsers.Where(m => m.UserPictureId == item.id).ToList();
                     item.CommentingUsers = dbContext.CommentingUsers.Where(m => m.UserPictureId == item.id).ToList();
-                    List<LikedUsers> likedCountUsers = dbContext.LikedUsers.Where(m => m.UserPictureId == item.id).ToList();
+                    item.CommentingUsers = item.CommentingUsers.OrderBy(s => s.DateTime).ToList();
+                    foreach (var item2 in item.CommentingUsers)
+                    {
+                        item2.CommentingUser = _userManager.FindByIdAsync(item2.CommentingUserId).Result;
+                    }
                 }
 
-                var friendsPostsOrder = friendsPost.OrderBy(s => s.dateTimePost).ToList();
-
+                friendsPost = friendsPost.OrderBy(s => s.dateTimePost).ToList();
                 PostViewModel post = new PostViewModel()
                 {
                     id = user.Id,
                     firstName = user.firstName,
                     lastName = user.lastName,
                     profilePicture = user.ProfilePicture,
-                    post = friendsPostsOrder,
+                    post = friendsPost,
                 };
+
                 return View(post);
             }
             else
@@ -116,60 +117,107 @@ namespace SocNetwork_.Controllers
             return View();
         }
 
-
         public IActionResult Photos()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
             user.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == user.Id).ToList();
+            foreach (var item in user.UserPictures)
+            {
+                item.LikedUsers = dbContext.LikedUsers.Where(m => m.UserPictureId == item.id).ToList();
+                item.CommentingUsers = dbContext.CommentingUsers.Where(m => m.UserPictureId == item.id).ToList();
+                item.CommentingUsers = item.CommentingUsers.OrderBy(s => s.DateTime).ToList();
+                foreach (var item2 in item.CommentingUsers)
+                {
+                    item2.CommentingUser = _userManager.FindByIdAsync(item2.CommentingUserId).Result;
+                }
+                foreach (var item2 in item.LikedUsers)
+                {
+                    item2.LikedUser = _userManager.FindByIdAsync(item2.LikedUserId).Result;
+                }
+            }
             return View(user);
         }
-
-
-        public async Task<IActionResult> AddLike(int id)
+        [HttpPost]
+        public async Task<JsonResult> AddLike(int id, string PageName)
         {
+            bool liked = false;
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
+            List<LikedUsers> likedUsers = dbContext.LikedUsers.Where(m => m.LikedUserId == user.Id).ToList();
             UserPictures userPicture = dbContext.UserPictures.Where(m => m.id == id).First();
+            foreach (var item in likedUsers)
+            {
+                if (item.UserPictureId == id)
+                {
+                    liked = true;
+                }
+            }
             LikedUsers likedUser = new LikedUsers()
             {
-                DateTime = DateTime.Now,
+                DateTime = Convert.ToDateTime(DateTime.Now.ToString("dd'/'MM'/'yyyy HH:mm:ss")),
                 LikedUser = user,
                 LikedUserId = user.Id,
                 UserPictureId = id,
-                UserPictures=userPicture,
+                UserPictures = userPicture,
                 ApplicationUserId = userPicture.ApplicationUserId,
             };
-            dbContext.LikedUsers.Add(likedUser);
+            if (liked == true)
+            {
+                LikedUsers dislake = likedUsers.Where(m => m.UserPictureId == id).First();
+                dbContext.LikedUsers.Remove(dislake);
+            }
+            else
+            {
+                dbContext.LikedUsers.Add(likedUser);
+            }
             dbContext.SaveChanges();
             await _userManager.UpdateAsync(user);
             await _signInManager.RefreshSignInAsync(user);
-            return LocalRedirect("~/Home"); ;
+            var post = dbContext.UserPictures.Where(m => m.id == id).First();
+            post.LikedUsers = dbContext.LikedUsers.Where(m => m.UserPictureId == id).ToList();
+            // int x = likedCount2.LikedUsers.Count;
+            return Json(post.LikedUsers.Count);
         }
-        public async Task<IActionResult> AddComment(int id,string comment)
+        [HttpPost]
+        public async Task<JsonResult> AddComment(int id, string comment, string PageName)
         {
+            string host = httpContextAccessor.HttpContext.Request.Host.Value;
+
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
+            //  PageName = PageName.Remove(PageName.Length - 7, 7);
             UserPictures userPicture = dbContext.UserPictures.Where(m => m.id == id).First();
-            CommentingUsers commentingUser = new CommentingUsers()
+            if (comment != null)
             {
-                DateTime = DateTime.Now,
-                CommentingUser = user,
-                CommentingUserId = user.Id,
-                UserPictureId = id,
-                UserPictures = userPicture,
-                Comment = comment,
-                ApplicationUserId = userPicture.ApplicationUserId,
+                CommentingUsers commentingUser = new CommentingUsers()
+                {
+                    DateTime = Convert.ToDateTime(DateTime.Now.ToString("dd'/'MM'/'yyyy HH:mm:ss")),
+                    CommentingUser = user,
+                    CommentingUserId = user.Id,
+                    UserPictureId = id,
+                    UserPictures = userPicture,
+                    Comment = comment,
+                    ApplicationUserId = userPicture.ApplicationUserId,
+                };
+                dbContext.CommentingUsers.Add(commentingUser);
+                await dbContext.SaveChangesAsync();
+            }
+            object responseData = new
+            {
+                commentigUserId= user.Id,
+                firstName = user.firstName,
+                lastName = user.lastName,
+                profilePicture = user.ProfilePicture,
+                id = user.Id,
+                dataTime = Convert.ToDateTime(DateTime.Now.ToString("dd'/'MM'/'yyyy HH:mm:ss")),
+                comment = comment
             };
-            dbContext.CommentingUsers.Add(commentingUser);
-            dbContext.SaveChanges();
-            await _userManager.UpdateAsync(user);
-            await _signInManager.RefreshSignInAsync(user);
-            return LocalRedirect("~/Home"); ;
+            //return View("UserViewPage", userPicture.ApplicationUserId);
+            return Json(responseData); 
         }
 
-
-        public IActionResult Chat()
+        public IActionResult Create()
         {
             return View();
         }

@@ -358,3 +358,6 @@ C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\bin\Debug
 C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\obj\Debug\netcoreapp3.1\Razor\Views\Chat\Index.cshtml.g.cs
 C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\bin\Debug\netcoreapp3.1\DocumentFormat.OpenXml.dll
 C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\bin\Debug\netcoreapp3.1\System.IO.Packaging.dll
+C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\bin\Debug\netcoreapp3.1\NaCl.dll
+C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\bin\Debug\netcoreapp3.1\PusherServer.dll
+C:\Users\Arus\Documents\GitHub\SocialNetwork\SocialNetwork\SocNetwork_\obj\Debug\netcoreapp3.1\Razor\Views\Chat\Index1.cshtml.g.cs

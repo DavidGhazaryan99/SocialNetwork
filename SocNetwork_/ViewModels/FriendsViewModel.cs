@@ -8,7 +8,10 @@ namespace SocNetwork_.ViewModels
 {
     public class FriendsViewModel
     {
-        public List<Friends> Friends { get; set; }
-        public ApplicationUser User { get; set; }
+        public List<Friends> UserViewFriends { get; set; }
+        public ApplicationUser UserView { get; set; }
+        public ApplicationUser SignInUser { get; set; }
+        public bool ThisIsFriend { get; set; }
+        public string FriendRequest { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "fNZd3N7s5H7/+8Ttj07AqgJ3DIAMy8JKI37jBMVkxy0rJa+e6Qx120q/lbMSWS3GsxFhm0pl1bLkgx4q3ENWFA==",
+  "dgSpecHash": "r9bptU00MHz27moXXJfCPkuWDcuYG2y0BwsGrEGTAdeHRLueqRWiKuY4cbaTKSo2rIOmU7M1IeLBE3OYdZ94Wg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Arus\\Documents\\GitHub\\SocialNetwork\\SocialNetwork\\SocNetwork_\\SocNetwork_.csproj",
   "expectedPackageFiles": [
@@ -68,9 +68,11 @@
     "C:\\Users\\Arus\\.nuget\\packages\\microsoft.visualstudio.web.codegenerators.mvc\\3.1.5\\microsoft.visualstudio.web.codegenerators.mvc.3.1.5.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\microsoft.win32.registry\\4.5.0\\microsoft.win32.registry.4.5.0.nupkg.sha512",
+    "C:\\Users\\Arus\\.nuget\\packages\\nacl.net\\0.1.13\\nacl.net.0.1.13.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
-    "C:\\Users\\Arus\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
+    "C:\\Users\\Arus\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\nuget.frameworks\\4.7.0\\nuget.frameworks.4.7.0.nupkg.sha512",
+    "C:\\Users\\Arus\\.nuget\\packages\\pusherserver\\4.6.1\\pusherserver.4.6.1.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\Arus\\.nuget\\packages\\runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",

@@ -71,7 +71,7 @@ namespace SocNetwork_
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapHub<ChatHub>("/chatHub");
+                endpoints.MapHub<ChatHub>("/Chat/Index");
             });
         }
     }

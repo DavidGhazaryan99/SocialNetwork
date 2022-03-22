@@ -4,14 +4,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <style>
-    /* Set black background color, white text and some padding */
-    footer {
-        background-color: #555;
-        color: white;
-        padding: 15px;
-    }
-</style>
-<style>
     .panel-shadow {
         box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px;
     }
@@ -150,6 +142,7 @@
 }
 @if (User.Identity.IsAuthenticated)
 {
+
     <div class="container text-center">
         <div class="row">
             <div class="col-sm-3 well">
@@ -158,12 +151,11 @@
                         <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">My Profile</a>
                     </p>
                     <img src="data:image/png;base64, @Model.profilePicture" class="img-circle" height="65" width="65" alt="Avatar">
-                    <p>
-                        @Model.firstName @Model.lastName
-                    </p>
+                    <h5> <a style="color:blue" href='@Url.Action("UserViewPage", "Search", new {id=Model.id })'> @Model.firstName @Model.lastName </a> </h5>
                 </div>
                 <p><a asp-controller="Home" asp-action="Photos">Photos</a></p>
-                <p><a href="#">Link</a></p>
+                <p><a asp-controller="Ajax" asp-action="index">Ajax test</a></p>
+                <p><a asp-controller="Chat" asp-action="index1">chat</a></p>
                 <p><a href="#">Link</a></p>
             </div>
             <div class="col-sm-7">
@@ -199,7 +191,6 @@
                                         <div class="pull-left meta">
                                             <div class="title h5">
                                                 <h5> <a style="color:blue" href='@Url.Action("UserViewPage", "Search", new {id=@item.ApplicationUser.Id })'> @item.ApplicationUser.firstName @item.ApplicationUser.lastName </a> </h5>
-                                                uploaded a photo.
                                             </div>
                                             <h6 class="text-muted time">@item.dateTimePost</h6>
                                         </div>
@@ -211,26 +202,28 @@
                                         <h4>Foto title</h4>
                                         <p>@item.textForPicture</p>
                                         <div class="stats">
-                                            <a href='@Url.Action("AddLike", "Home", new { id = @item.id})' class="btn btn-default stat-item">
-                                                <i class="fa fa-thumbs-up icon"></i>
-                                                @if (item.LikedUsers.Count > 0)
-                                                {
-                                                    @item.LikedUsers.Count
-                                                }
-                                            </a>
+                                            <button onclick="AddLike(@item.id)" class="btn btn-default stat-item">
+                                                <i id="@item.id" class="fa fa-thumbs-up icon">
+                                                    @if (item.LikedUsers.Count > 0)
+                                                    {
+                                                        @item.LikedUsers.Count
+                                                    }
+                                                </i>
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="post-footer">
 
-                                        <form class="input-group">
+                                        @*<form class="input-group">
                                             <input asp-for="@item.id" name="id" id="id" hidden />
-                                            <div style="display:inline-block">
-                                                <input style="width:525px" class="form-control" id="Comment" name="Comment" placeholder="Add a comment" type="text">
-                                            </div>
-                                            <button style="float:right" asp-action="AddComment" class="btn btn-outline-secondary" type="submit"><i class="fa fa-edit"></i></button>
-                                        </form>
+                                            <input value="@System.IO.Path.GetFileNameWithoutExtension(ViewContext.View.Path)" name="PageName" hidden />
+                                            </form>*@
+                                        <div style="display:inline-block">
+                                            <input style="width:525px" class="form-control" id="inputComment" placeholder="Add a comment" type="text">
+                                        </div>
+                                        <button onclick="AddComment(@item.id)" style="float:right " @*asp-action="AddComment"*@ class="btn btn-outline-secondary" type="submit"><i class="fa fa-edit"></i></button>
 
-                                        <ul class="comments-list">
+                                        <ul id="CommentList" class="comments-list">
                                             @foreach (var item2 in item.CommentingUsers)
                                             {
                                                 <li class="comment">
@@ -272,3 +265,5 @@
         </div>
     </div>
 }
+@*$("#myimage").attr("src","data:image/jpg;base64," + "Qk02EA4AAA....")*@
+<script src="~/js/site.js"></script>

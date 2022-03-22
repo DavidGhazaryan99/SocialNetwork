@@ -91,9 +91,9 @@
                 <p>
                     <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">My Profile</a>
                 </p>
-                <img src="data:image/png;base64, @Model.User.ProfilePicture" class="img-circle" height="65" width="65" alt="Avatar">
+                <img src="data:image/png;base64, @Model.UserView.ProfilePicture" class="img-circle" height="65" width="65" alt="Avatar">
                 <p>
-                    @Model.User.firstName @Model.User.lastName
+                    @Model.UserView.firstName @Model.UserView.lastName
                 </p>
             </div>
             <p><a asp-controller="Home" asp-action="Photos">Photos</a></p>
@@ -113,9 +113,9 @@
                     </div>
                 </div>
             </div>
-            @if (Model.Friends != null)
+            @if (Model.UserViewFriends != null)
             {
-                @foreach (var item in Model.Friends)
+                @foreach (var item in Model.UserViewFriends)
                 {
                     <div class="container">
                         <div class="row">

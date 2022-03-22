@@ -11,7 +11,7 @@
     }
 
     .bg-blue-500 {
-        background-color: #2196f3;
+        background-color: darkslategray;
     }
 
     .container-overlap {
@@ -637,34 +637,50 @@
     <!-- uiView:  --><div class="ng-fadeInLeftShort ng-scope" style="">
         <div class="container-overlap bg-blue-500 ng-scope">
             <div class="media m0 pv">
-                <div class="media-left"><a href="#"><img src="data:image/png;base64,@Model.User.ProfilePicture" alt="User" class="media-object img-circle thumb64"></a></div>
+                <div class="media-left"><a href="#"><img src="data:image/png;base64,@Model.UserView.ProfilePicture" alt="User" class="media-object img-circle thumb64"></a></div>
                 <div class="media-body media-middle">
-                    <h4 class="media-heading text-white">@Model.User.firstName @Model.User.lastName</h4>
+                    <h4 class="media-heading text-white">@Model.UserView.firstName @Model.UserView.lastName</h4>
+                </div>
+                <div class="media-right text-black">
+                    @if (Model.SignInUser.Id == Model.UserView.Id)
+
+                    }
+                    @if (Model.ThisIsFriend == false && Model.SignInUser.Id != Model.UserView.Id && Model.FriendRequest == null)
+                    {
+                        <input type="button" value="Add Friend" onclick="location.href='@Url.Action("AddFriend", "Search", new {id=Model.UserView.Id })'" />
+                    }
+                    @if (Model.ThisIsFriend == true && Model.SignInUser.Id != Model.UserView.Id && Model.FriendRequest == null)
+                    {
+                        <input type="button" value="delete" onclick="location.href='@Url.Action("DeleteFriend", "Friend", new {id=Model.UserView.Id })'" />
+                    }
+                    @if (Model.FriendRequest == "false")
+                    {
+                        <h4 style="color:white">You already sent friend request</h4>
+                    }
+                    @if (Model.FriendRequest == "true")
+                    {
+                        <input type="button" value="Accept" onclick="location.href='@Url.Action("Accept", "Search", new { id = Model.UserView.Id })'" />
+                        <input type="button" value="Decline" onclick="location.href='@Url.Action("Decline", "Search", new { id = Model.UserView.Id })'" />
+                    }
+                    @if (Model.FriendRequest == null)
+                    {
+
+                    }
+
                 </div>
             </div>
         </div>
+
+
         <div class="container-fluid ng-scope">
             <div class="row">
                 <!-- Left column-->
                 <div class="col-md-7 col-lg-8">
-                    <form class="card ng-pristine ng-valid">
-                        @*<h5 class="card-heading pb0">
-                                About
-                            </h5>
-                            <div class="card-body">
-                                <p class="ng-scope ng-binding editable">Pellentesque porta tincidunt justo, non fringilla erat iaculis in. Sed nisi erat, ornare eu pellentesque quis, pellentesque non nulla. Proin rutrum, est pellentesque commodo mattis, sem justo porttitor odio, id aliquet lacus augue nec nisl.</p>
-                            </div>
-                            <div class="card-divider"></div>
-                            <div class="card-offset">
-                                <div class="card-offset-item text-right">
-                                    <button type="button" class="btn-raised btn btn-warning btn-circle btn-lg"><em class="fa fa-edit"></em></button>
-                                    <button type="submit" class="btn-raised btn btn-success btn-circle btn-lg ng-hide"><em class="fa fa-check"></em></button>
-                                </div>
-                            </div>*@
+                    <div style="width:680px" class="card ng-pristine ng-valid">
                         <div class="card-body">
-                            @foreach (var item in Model.User.UserPictures)
+                            @foreach (var item in Model.UserView.UserPictures)
                             {
-                                <div class="container bootstrap snippets bootdey">
+                                <div style="margin-left:-62px;margin-top:-17px;width:2500px" class="container bootstrap snippets bootdey">
                                     <div class="col-md-8">
                                         <div class="col-sm-12">
                                             <div class="panel panel-white post panel-shadow">
@@ -674,8 +690,7 @@
                                                     </div>
                                                     <div class="pull-left meta">
                                                         <div class="title h5">
-                                                            <h5> <input type="button" style="background-color:transparent" value="@item.ApplicationUser.firstName @item.ApplicationUser.lastName" onclick="location.href='@Url.Action("UserViewPage", "Search", new {id=@item.ApplicationUser.Id })'" /></h5>
-                                                            uploaded a photo.
+                                                            <h5> <a style="color:blue" href='@Url.Action("UserViewPage", "Search", new {id=@item.ApplicationUser.Id })'> @item.ApplicationUser.firstName @item.ApplicationUser.lastName </a> </h5>
                                                         </div>
                                                         <h6 class="text-muted time">@item.dateTimePost</h6>
                                                     </div>
@@ -687,58 +702,43 @@
                                                     <h4>Foto title</h4>
                                                     <p>@item.textForPicture</p>
                                                     <div class="stats">
-                                                        <a href="#" class="btn btn-default stat-item">
-                                                            <i class="fa fa-thumbs-up icon"></i>228
-                                                        </a>
-                                                        <a href="#" class="btn btn-default stat-item">
-                                                            <i class="fa fa-share icon"></i>128
+                                                        <a href='@Url.Action("AddLike", "Home", new { id = @item.id})' class="btn btn-default stat-item">
+                                                            <i class="fa fa-thumbs-up icon"></i>
+                                                            @if (item.LikedUsers.Count > 0)
+                                                            {
+                                                                @item.LikedUsers.Count
+                                                            }
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <div class="post-footer">
-                                                    <div class="input-group">
-                                                        <input class="form-control" placeholder="Add a comment" type="text">
-                                                        <span class="input-group-addon">
-                                                            <a href="#"><i class="fa fa-edit"></i></a>
-                                                        </span>
-                                                    </div>
+
+                                                    <form class="input-group">
+                                                        <input asp-for="@item.id" name="id" id="id" hidden />
+
+
+                                                        <div style="display:inline-block">
+                                                            <input style="width:595px" class="form-control" id="Comment" name="Comment" placeholder="Add a comment" type="text">
+                                                        </div>
+                                                        <button style="float:right;width:50px" asp-controller="" asp-action="AddComment" class="btn btn-outline-secondary" type="submit"><i class="fa fa-edit"></i></button>
+                                                    </form>
+
                                                     <ul class="comments-list">
-                                                        <li class="comment">
-                                                            <a class="pull-left" href="#">
-                                                                <img class="avatar" src="https://bootdey.com/img/Content/user_3.jpg" alt="avatar">
-                                                            </a>
-                                                            <div class="comment-body">
-                                                                <div class="comment-heading">
-                                                                    <h4 class="user">Full name 1</h4>
-                                                                    <h5 class="time">7 minutes ago</h5>
+                                                        @foreach (var item2 in item.CommentingUsers)
+                                                        {
+                                                            <li class="comment">
+                                                                <a class="pull-left" href='@Url.Action("UserViewPage", "Search", new {id=item2.CommentingUserId })'>
+                                                                    <img class="avatar" src="data:image/png;base64,@item2.CommentingUser.ProfilePicture" alt="avatar">
+                                                                </a>
+                                                                <div class="comment-body">
+                                                                    <div class="comment-heading">
+                                                                        <h4 class="user">@item2.CommentingUser.firstName @item2.CommentingUser.lastName</h4>
+                                                                        <h5 class="time">@item2.DateTime</h5>
+                                                                    </div>
+                                                                    <p>@item2.Comment</p>
                                                                 </div>
-                                                                <p>This is a comment bla bla bla</p>
-                                                            </div>
-                                                        </li>
-                                                        <li class="comment">
-                                                            <a class="pull-left" href="#">
-                                                                <img class="avatar" src="https://bootdey.com/img/Content/user_2.jpg" alt="avatar">
-                                                            </a>
-                                                            <div class="comment-body">
-                                                                <div class="comment-heading">
-                                                                    <h4 class="user">Full name 2</h4>
-                                                                    <h5 class="time">3 minutes ago</h5>
-                                                                </div>
-                                                                <p>This is another comment bla bla bla</p>
-                                                            </div>
-                                                        </li>
-                                                        <li class="comment">
-                                                            <a class="pull-left" href="#">
-                                                                <img class="avatar" src="https://bootdey.com/img/Content/user_3.jpg" alt="avatar">
-                                                            </a>
-                                                            <div class="comment-body">
-                                                                <div class="comment-heading">
-                                                                    <h4 class="user">Full name 1</h4>
-                                                                    <h5 class="time">10 seconds ago</h5>
-                                                                </div>
-                                                                <p>Wow! This is a comment</p>
-                                                            </div>
-                                                        </li>
+                                                            </li>
+                                                        }
                                                     </ul>
                                                 </div>
                                             </div>
@@ -748,7 +748,7 @@
                             }
                         </div>
                         <div class="card-divider"></div>
-                    </form>
+                    </div>
                 </div>
                 <!-- Right column-->
                 <div class="col-md-5 col-lg-4">
@@ -760,23 +760,23 @@
                                 <tbody>
                                     <tr>
                                         <td><em class="ion-egg icon-fw mr"></em>Birthday</td>
-                                        <td><span class="ng-scope ng-binding editable">@Model.User.DateOfBirth</span></td>
+                                        <td><span class="ng-scope ng-binding editable">@Model.UserView.DateOfBirth</span></td>
                                     </tr>
                                     <tr>
                                         <td><em class="ion-man icon-fw mr"></em>Gender</td>
-                                        <td><span class="ng-scope ng-binding editable">@Model.User.Gender</span></td>
+                                        <td><span class="ng-scope ng-binding editable">@Model.UserView.Gender</span></td>
                                     </tr>
                                     <tr>
                                         <td><em class="ion-android-home icon-fw mr"></em>Address</td>
-                                        <td><span class="ng-scope ng-binding editable">@Model.User.Address</span></td>
+                                        <td><span class="ng-scope ng-binding editable">@Model.UserView.Address</span></td>
                                     </tr>
                                     <tr>
                                         <td><em class="ion-email icon-fw mr"></em>Email</td>
-                                        <td><span class="ng-scope editable"><a href="" class="ng-binding">@Model.User.Email</a></span></td>
+                                        <td><span class="ng-scope editable"><a href="" class="ng-binding">@Model.UserView.Email</a></span></td>
                                     </tr>
                                     <tr>
                                         <td><em class="ion-ios-telephone icon-fw mr"></em>Contact phone</td>
-                                        <td><span class="ng-scope ng-binding editable">@Model.User.PhoneNumber</span></td>
+                                        <td><span class="ng-scope ng-binding editable">@Model.UserView.PhoneNumber</span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -790,17 +790,17 @@
                             Friends
                         </h5>
 
-                        @if (Model.Friends != null)
+                        @if (Model.UserViewFriends != null)
                         {
-                            if (Model.Friends.Count <= 5)
+                            if (Model.UserViewFriends.Count <= 5)
                             {
-                                @for (int i = 0; i < Model.Friends.Count; i++)
+                                @for (int i = 0; i < Model.UserViewFriends.Count; i++)
                                 {
                                     <div class="mda-list">
                                         <div class="mda-list-item">
-                                            <img src="data:image/png;base64, @Model.Friends[i].friendUser.ProfilePicture" alt="List user" class="mda-list-item-img">
+                                            <img src="data:image/png;base64, @Model.UserViewFriends[i].friendUser.ProfilePicture" alt="List user" class="mda-list-item-img">
                                             <div class="mda-list-item-text mda-2-line">
-                                                <h3><a href="#">@Model.Friends[i].friendUser.firstName @Model.Friends[i].friendUser.lastName </a></h3>
+                                                <h3><a href="#">@Model.UserViewFriends[i].friendUser.firstName @Model.UserViewFriends[i].friendUser.lastName </a></h3>
                                                 <div class="text-muted text-ellipsis">Ut ac nisi id mauris</div>
                                             </div>
                                         </div>
@@ -809,14 +809,13 @@
                             }
                             else
                             {
-                                foreach (var item in Model.Friends)
+                                foreach (var item in Model.UserViewFriends)
                                 {
                                     <div class="mda-list">
                                         <div class="mda-list-item">
                                             <img src="data:image/png;base64, @item.friendUser.ProfilePicture" alt="List user" class="mda-list-item-img">
                                             <div class="mda-list-item-text mda-2-line">
                                                 <h3><a href="#">@item.friendUser.firstName @item.friendUser.lastName</a></h3>
-                                                <div class="text-muted text-ellipsis">Ut ac nisi id mauris</div>
                                             </div>
                                         </div>
                                     </div>

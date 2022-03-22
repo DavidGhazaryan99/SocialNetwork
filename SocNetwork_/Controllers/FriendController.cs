@@ -41,8 +41,9 @@ namespace SocNetwork_.Controllers
             }
             FriendsViewModel model = new FriendsViewModel()
             {
-                Friends = friends,
-                User = user
+                UserViewFriends = friends,
+                UserView = user,
+                ThisIsFriend=true
             };
             return View(model);
         }
@@ -75,22 +76,25 @@ namespace SocNetwork_.Controllers
                     {
                         FriendsViewModel model = new FriendsViewModel()
                         {
-                            User = user,
+                            UserView = user,
+                            ThisIsFriend=true
                         };
                         return View("Index", model);
                     }
                 }
                 FriendsViewModel model1 = new FriendsViewModel()
                 {
-                    User = user,
-                    Friends = friends
+                    UserView = user,
+                    UserViewFriends = friends,
+                    ThisIsFriend=true
                 };
                 return View("Index", model1);
             }
             FriendsViewModel model2 = new FriendsViewModel()
             {
-                User = user,
-                Friends = friends
+                UserView = user,
+                UserViewFriends = friends,
+                ThisIsFriend=true
             };
             return View("Index", model2);
         }

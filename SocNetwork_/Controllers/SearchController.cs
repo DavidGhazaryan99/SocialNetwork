@@ -127,8 +127,11 @@ namespace SocNetwork_.Controllers
                 Friends = user.FriendsFrom,
                 Users = validUsers
             };
-            return View("Index",model);
+
+
+            return View("Index", model);
         }
+
         public async Task<IActionResult> AddFriend(string id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -195,18 +198,57 @@ namespace SocNetwork_.Controllers
         }
         public IActionResult UserViewPage(string id)
         {
-            ApplicationUser user = _userManager.FindByIdAsync(id).Result;
-            List<Friends> friends = dbContext.Friends.Where(m => m.userId == user.Id).ToList();
-            user.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == user.Id).ToList();
-            foreach (var item in friends)
+            bool thisIsFriend=false;
+            string friendRequest = null;
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
+            ApplicationUser userView = _userManager.FindByIdAsync(id).Result;
+            List<Friends> userVirwFriends = dbContext.Friends.Where(m => m.userId == userView.Id).ToList();
+            userView.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == userView.Id).ToList();
+            foreach (var item in userVirwFriends)
             {
                 ApplicationUser friendUser = _userManager.FindByIdAsync(item.friendUserId).Result;
                 item.friendUser = friendUser;
             }
+            foreach (var item in userView.UserPictures)
+            {
+                item.LikedUsers = dbContext.LikedUsers.Where(m => m.UserPictureId == item.id).ToList();
+                item.CommentingUsers = dbContext.CommentingUsers.Where(m => m.UserPictureId == item.id).ToList();
+                item.CommentingUsers = item.CommentingUsers.OrderBy(s => s.DateTime).ToList();
+            }
+
+            List<Friends> friends = dbContext.Friends.Where(m => m.userId == user.Id).ToList();
+            foreach (var item in friends)
+            {
+                if(item.friendUserId==id)
+                {
+                    thisIsFriend = true;
+                };
+            };
+
+            List<FriendRequest> friendRequest1 = dbContext.FriendsRequest.Where(m => m.friendFromId == userView.Id).ToList();
+            foreach (var item in friendRequest1)
+            {
+                if(item.friendToId==user.Id)
+                {
+                    friendRequest = "true";
+                }
+            }
+            List<FriendRequest> friendRequest2 = dbContext.FriendsRequest.Where(m => m.friendToId == userView.Id).ToList();
+            foreach (var item in friendRequest2)
+            {
+                if (item.friendFromId == user.Id)
+                {
+                    friendRequest ="false";
+                }
+            }
             FriendsViewModel model = new FriendsViewModel()
             {
-                Friends = friends,
-                User = user
+                UserViewFriends = userVirwFriends,
+                UserView = userView,
+                SignInUser = user,
+                ThisIsFriend = thisIsFriend,
+                FriendRequest=friendRequest
             };
             return View(model);
         }
@@ -214,6 +256,34 @@ namespace SocNetwork_.Controllers
         public ActionResult Details(int id)
         {
             return View();
+        }
+        public ActionResult ajaxTest()
+        {
+            var allUsers = _userManager.Users.ToListAsync().Result;
+
+            return View(allUsers);
+        }
+        public JsonResult GetSearchingData(string SearchBy, string SearchValue)
+        {
+            List<ApplicationUser> users = new List<ApplicationUser>();
+            if (SearchBy == "ID")
+            {
+                try
+                {
+                    string id = SearchValue;
+                    users = _userManager.Users.Where(x => x.Id == id || SearchValue == null).ToList();
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("(0) is not A ID", SearchValue);
+                }
+                return Json(users, new Newtonsoft.Json.JsonSerializerSettings());
+            }
+            else
+            {
+                users = _userManager.Users.Where(x => x.firstName.Contains(SearchValue) || SearchValue == null).ToList();
+                return Json(users, new Newtonsoft.Json.JsonSerializerSettings());
+            }
         }
 
         // GET: SearchController/Create

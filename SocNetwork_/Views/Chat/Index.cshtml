@@ -1,35 +1,173 @@
-﻿@model SocNetwork_.Models.ApplicationUser
+﻿@model SocNetwork_.ViewModels.ChatViewModel
 @{
     ViewData["Title"] = "Index";
+    var userName = @Model.SignInUser.firstName + " " + @Model.SignInUser.lastName;
 }
-<div class="container">
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        @*<div class="col-2">User</div>
-        <div class="col-4"><input type="text" id="userInput" /></div>*@
-        <div class="col-2" id="userInput">@Model.firstName @Model.lastName </div>
+<style>
+    body {
+        margin-top: 20px;
+    }
 
-    </div>
-    <div class="row">
-        <div class="col-2">Message</div>
-        <div class="col-4"><input type="text" id="messageInput" /></div>
-    </div>
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-6">
-            <input type="button" id="sendButton" value="Send Message" />
+    .chat-online {
+        color: #34ce57
+    }
+
+    .chat-offline {
+        color: #e4606d
+    }
+
+    .chat-messages {
+        display: flex;
+        flex-direction: column;
+        max-height: 800px;
+        overflow-y: scroll
+    }
+
+    .chat-message-left,
+    .chat-message-right {
+        display: flex;
+        flex-shrink: 0
+    }
+
+    .chat-message-left {
+        margin-right: auto
+    }
+
+    .chat-message-right {
+        flex-direction: row-reverse;
+        margin-left: auto
+    }
+
+    .py-3 {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+
+    .px-4 {
+        padding-right: 1.5rem !important;
+        padding-left: 1.5rem !important;
+    }
+
+    .flex-grow-0 {
+        flex-grow: 0 !important;
+    }
+
+    .border-top {
+        border-top: 1px solid #dee2e6 !important;
+    }
+</style>
+
+<main class="content">
+    <div class="container p-0">
+
+        <h1 class="h3 mb-3">Messages</h1>
+
+        <div class="card">
+            <div class="row g-0">
+                <div class="col-12 col-lg-5 col-xl-3 border-right">
+
+                    <div class="px-4 d-none d-md-block">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <input type="text" class="form-control my-3" placeholder="Search...">
+                            </div>
+                        </div>
+                    </div>
+
+                    @foreach (var item in Model.UserViewFriends)
+                    {
+                        <a href="#" class="list-group-item list-group-item-action border-0">
+                            <div class="badge bg-success float-right"></div>
+                            <div class="d-flex align-items-start">
+                                <img src="data:image/png;base64, @item.friendUser.ProfilePicture" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
+                                <div class="flex-grow-1 ml-3">
+                                    @item.friendUser.firstName @item.friendUser.lastName
+                                    <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                    <hr class="d-block d-lg-none mt-1 mb-0">
+                </div>
+                <div class="col-12 col-lg-7 col-xl-9">
+                    <div class="py-2 px-4 border-bottom d-none d-lg-block">
+                        <div class="d-flex align-items-center py-1">
+                            <div class="position-relative">
+                                <img src="data:image/png;base64, @Model.UserView.ProfilePicture" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
+                            </div>
+                            <div class="flex-grow-1 pl-3">
+                                <div class="col-2" id="userInput">@Model.UserView.firstName @Model.UserView.lastName </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-light border btn-lg px-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal feather-lg"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="position-relative">
+                        <div style="height:600px" id="messagesList" class="chat-messages p-4">
+
+                            @foreach (var message in Model.Messages.OrderBy(m => m.When))
+                            {
+                                string containerClass;
+                                if (message.UserName == @Model.SignInUser.Email)
+                                {
+                                    containerClass = "chat-message-right pb-4";
+                                }
+                                else
+                                {
+                                    containerClass = "chat-message-left pb-4";
+                                }
+
+                                <div class="@containerClass">
+                                    <div>
+                                        <img src="data:image/png;base64, @message.User.ProfilePicture" class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40">
+                                        <div class="text-muted small text-nowrap mt-2">@message.When.ToString()</div>
+                                    </div>
+                                    <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                                        <div class="font-weight-bold mb-1">@message.User.firstName @message.User.lastName</div>
+                                        @message.Text
+                                    </div>
+                                </div>
+                             }
+                        </div>
+                    </div>
+                    <div class="flex-grow-0 py-3 px-4 border-top">
+                        <form asp-action="Create"
+                              data-ajax-begin="clearInputField" data-ajax-complete=""
+                              data-ajax-failure="alert('Fail')" data-ajax-success="sendMessage"
+                              data-ajax="true" data-ajax-method="POST">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <input name="Text" class="form-control" id="messageText" />
+                            </div>
+                            <div>
+                                <input hidden value="@Model.UserView.Id" name="ReceiverId" id="id" />
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" value="Send" id="SendButton" class="btn btn-success" />
+                            </div>
+                            <input type="hidden" value="@Model.SignInUser.firstName @Model.SignInUser.lastName " name="username" />
+                        </form>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <hr />
-    </div>
-</div>
-<div class="row">
-    <div class="col-6">
-        <ul id="messagesList"></ul>
-    </div>
-</div>
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js"></script>
+
+</main>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <script>
+    const userName = "@ViewBag.CurrentUserName";
+    </script>
+}
+@section scripts {
+    <script src="~/signalr/signalr.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/js/chat.js"></script>
+    <script src="~/js/signalrReqHandler.js"></script>
+}

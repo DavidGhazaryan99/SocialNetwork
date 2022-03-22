@@ -4,67 +4,118 @@
 *@
 @{
 }
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body {font-family: Arial, Helvetica, sans-serif;}
+    .container2 {
+        position: relative;
+        width: 50%;
+    }
 
-/* The Modal (background) */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
+    .image {
+        opacity: 1;
+        display: block;
+        width: 100%;
+        height: auto;
+        transition: .5s ease;
+        backface-visibility: hidden;
+    }
 
-/* Modal Content */
-.modal-content {
-  position: relative;
-  background-color: #fefefe;
-  margin: auto;
-  padding: 0;
-  border: 1px solid #888;
-  width: 80%;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-  -webkit-animation-name: animatetop;
-  -webkit-animation-duration: 0.4s;
-  animation-name: animatetop;
-  animation-duration: 0.4s
-}
-/* The Close Button */
-.close {
-  color: white;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
+    .middle {
+        transition: .5s ease;
+        opacity: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        text-align: center;
+    }
 
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
+    .container2:hover .image {
+        opacity: 0.3;
+    }
 
-.modal-header {
-  padding: 2px 16px;
-  background-color: #5cb85c;
-  color: white;
-}
+    .container2:hover .middle {
+        opacity: 1;
+    }
 
-.modal-body {padding: 2px 16px;}
+    .text {
+        background-color: transparent;
+        color: black;
+        font-size: 16px;
+        padding: 16px 32px;
+    }
 
-.modal-footer {
-  padding: 2px 16px;
-  background-color: #5cb85c;
-  color: white;
-}
+
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        position: relative;
+        background-color: #fefefe;
+        margin: auto;
+        padding: 0;
+        border: 1px solid #888;
+        width: 80%;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+        -webkit-animation-name: animatetop;
+        -webkit-animation-duration: 0.4s;
+        animation-name: animatetop;
+        animation-duration: 0.4s
+    }
+    /* The Close Button */
+    .close {
+        color: white;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    .modal-header {
+        padding: 2px 16px;
+        background-color: #5cb85c;
+        color: white;
+    }
+
+    .modal-body {
+        padding: 2px 16px;
+    }
+
+    .modal-footer {
+        padding: 2px 16px;
+        background-color: #5cb85c;
+        color: white;
+    }
 </style>
 <style>
 
@@ -97,6 +148,136 @@ body {font-family: Arial, Helvetica, sans-serif;}
                     left: 0;
                 }
 </style>
+<style>
+    .panel-shadow {
+        box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px;
+    }
+
+    .panel-white {
+        border: 1px solid #dddddd;
+    }
+
+        .panel-white .panel-heading {
+            color: #333;
+            background-color: #fff;
+            border-color: #ddd;
+        }
+
+        .panel-white .panel-footer {
+            background-color: #fff;
+            border-color: #ddd;
+        }
+
+    .post .post-heading {
+        height: 95px;
+        padding: 20px 15px;
+    }
+
+        .post .post-heading .avatar {
+            width: 60px;
+            height: 60px;
+            display: block;
+            margin-right: 15px;
+        }
+
+        .post .post-heading .meta .title {
+            margin-bottom: 0;
+        }
+
+            .post .post-heading .meta .title a {
+                color: black;
+            }
+
+                .post .post-heading .meta .title a:hover {
+                    color: #aaaaaa;
+                }
+
+        .post .post-heading .meta .time {
+            margin-top: 8px;
+            margin-left: 100px;
+            color: #999;
+        }
+
+    .post .post-image .image {
+        width: 100%;
+        height: auto;
+    }
+
+    .post .post-description {
+        padding: 15px;
+    }
+
+        .post .post-description p {
+            font-size: 14px;
+        }
+
+        .post .post-description .stats {
+            margin-top: 20px;
+        }
+
+            .post .post-description .stats .stat-item {
+                display: inline-block;
+                margin-right: 15px;
+            }
+
+                .post .post-description .stats .stat-item .icon {
+                    margin-right: 8px;
+                }
+
+    .post .post-footer {
+        border-top: 1px solid #ddd;
+        padding: 15px;
+    }
+
+        .post .post-footer .input-group-addon a {
+            color: #454545;
+        }
+
+        .post .post-footer .comments-list {
+            padding: 0;
+            margin-top: 20px;
+            list-style-type: none;
+        }
+
+            .post .post-footer .comments-list .comment {
+                display: block;
+                width: 100%;
+                margin: 20px 0;
+            }
+
+                .post .post-footer .comments-list .comment .avatar {
+                    width: 35px;
+                    height: 35px;
+                }
+
+                .post .post-footer .comments-list .comment .comment-heading {
+                    display: block;
+                    width: 100%;
+                }
+
+                    .post .post-footer .comments-list .comment .comment-heading .user {
+                        font-size: 14px;
+                        font-weight: bold;
+                        display: inline;
+                        margin-top: 0;
+                        margin-right: 10px;
+                    }
+
+                    .post .post-footer .comments-list .comment .comment-heading .time {
+                        font-size: 12px;
+                        color: #aaa;
+                        margin-top: 0;
+                        display: inline;
+                    }
+
+                .post .post-footer .comments-list .comment .comment-body {
+                    margin-left: 50px;
+                }
+
+                .post .post-footer .comments-list .comment > .comments-list {
+                    margin-left: 50px;
+                }
+</style>
 <div class="container text-center">
     <div class="row">
         <div class="col-sm-3 well">
@@ -107,16 +288,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
                 <img src="data:image/png;base64, @Model.ProfilePicture" class="img-circle" height="65" width="65" alt="Avatar">
                 <p>
                     @Model.firstName @Model.lastName
-                </p>
-            </div>
-            <div class="well">
-                <p><a href="#">Interests</a></p>
-                <p>
-                    <span class="label label-default">News</span>
-                    <span class="label label-success">Labels</span>
-                    <span class="label label-info">Football</span>
-                    <span class="label label-warning">Gaming</span>
-                    <span class="label label-danger">Friends</span>
                 </p>
             </div>
             <p><a asp-controller="Home" asp-action="Photos">Photos</a></p>
@@ -131,7 +302,79 @@ body {font-family: Arial, Helvetica, sans-serif;}
                         @foreach (var item in @Model.UserPictures)
                         {
                             <li>
-                                <img src="data:image/png;base64, @item.Picture" class="img-portrait" style="width:150px;height:150px">
+                                <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">
+                                    <div class="container2">
+                                        <img src="data:image/png;base64,@item.Picture" style="width:150px;height:150px" alt="Avatar" class="image">
+                                        <div class="middle">
+                                            <div class="text">
+                                                <p>
+                                                    <i class="fa fa-thumbs-up icon"></i>
+                                                    @if (item.LikedUsers.Count > 0)
+                                                    {
+                                                        @item.LikedUsers.Count
+                                                    }
+                                                </p>
+                                                <p>
+                                                    <i class="glyphicon glyphicon-comment"></i>
+                                                    @if (item.CommentingUsers.Count > 0)
+                                                    {
+                                                        @item.CommentingUsers.Count
+                                                    }
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
+                                <div id="id01" class="w3-modal">
+                                    <div class="w3-modal-content w3-animate-zoom w3-card-4">
+                                        <div class="w3-container">
+                                            <span onclick="document.getElementById('id01').style.display='none'"
+                                                  class="w3-button w3-display-topright">&times;</span>
+                                        </div>
+                                        <div class="w3-container text-left">
+
+                                            <div style="display:inline-block">
+                                                <img src="data:image/png;base64,@item.Picture" style=" margin-left:-16px; width:530px;height:530px" alt="Avatar" class="image">
+                                            </div>
+                                            <div style="margin-top:50px ;float:right">
+                                                <div style="height:350px;width:350px" class="overflow-auto">
+                                                    <div class="post">
+                                                        <div class="panel panel-white post panel-shadow">
+
+                                                            <div class="post-footer">
+                                                                <ul class="comments-list">
+                                                                    @foreach (var item2 in item.CommentingUsers)
+                                                                    {
+                                                                        <li class="comment">
+                                                                            <a class="pull-left" href='@Url.Action("UserViewPage", "Search", new {id=item2.CommentingUserId })'>
+                                                                                <img class="avatar" src="data:image/png;base64,@item2.CommentingUser.ProfilePicture" alt="avatar">
+                                                                            </a>
+                                                                            <div class="comment-body">
+                                                                                <div class="comment-heading">
+                                                                                    <h4 class="user">@item2.CommentingUser.firstName @item2.CommentingUser.lastName</h4>
+                                                                                    <h5 class="time">@item2.DateTime</h5>
+                                                                                </div>
+                                                                                <p>@item2.Comment</p>
+                                                                            </div>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <form class="input-group">
+                                                    <input asp-for="@item.id" name="id" id="id" hidden />
+                                                    <input value="@System.IO.Path.GetFileNameWithoutExtension(ViewContext.View.Path)" name="PageName" hidden />
+                                                    <div style="display:inline-block">
+                                                        <input style="width:300px" class="form-control" id="Comment" name="Comment" placeholder="Add a comment" type="text">
+                                                    </div>
+                                                    <button style="float:right ;width:50px" asp-controller="Home" asp-action="AddComment" class="btn btn-outline-secondary" type="submit"><i class="fa fa-edit"></i></button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
                         }
                     </ul>
@@ -140,57 +383,3 @@ body {font-family: Arial, Helvetica, sans-serif;}
         </div>
     </div>
 </div>
-
-    <h2>Animated Modal with Header and Footer</h2>
-
-    <!-- Trigger/Open The Modal -->
-    <button id="myBtn">Open Modal</button>
-
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
-
-        <!-- Modal content -->
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close">&times;</span>
-                <h2>Modal Header</h2>
-            </div>
-            <div class="modal-body">
-                <p>Some text in the Modal Body</p>
-                <p>Some other text...</p>
-            </div>
-            <div class="modal-footer">
-                <h3>Modal Footer</h3>
-            </div>
-        </div>
-
-    </div>
-
-    <script>
-        // Get the modal
-        var modal = document.getElementById("myModal");
-
-        // Get the button that opens the modal
-        var btn = document.getElementById("myBtn");
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks the button, open the modal
-        btn.onclick = function () {
-            modal.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
-
