@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SocNetwork_.Data;
 using SocNetwork_.Models;
+using SocNetwork_.Service;
 using SocNetwork_.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,11 @@ namespace SocNetwork_.Controllers
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public SearchController(ILogger<SearchController> logger, IHttpContextAccessor httpContextAccessor, ApplicationDbContext context, IWebHostEnvironment hostEnvironment, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly ServiceLogic _serviceLogic;
+
+        public SearchController(ServiceLogic serviceLogic, ILogger<SearchController> logger, IHttpContextAccessor httpContextAccessor, ApplicationDbContext context, IWebHostEnvironment hostEnvironment, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
+            _serviceLogic = serviceLogic;
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
@@ -33,102 +37,19 @@ namespace SocNetwork_.Controllers
         }
 
         // GET: SearchController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
-            var allUsers = _userManager.Users.ToListAsync().Result;
-            user.FriendsFrom = dbContext.FriendsRequest.Where(m => m.friendToId == user.Id).ToList();
-            List<ApplicationUser> validUsers = new List<ApplicationUser>();
-            for (int i = 0; i < allUsers.Count; i++)
-            {
-                for (int j = 0; j < user.FriendsFrom.Count; j++)
-                {
-                    if (user.FriendsFrom[j].friendFrom == allUsers[i])
-                    {
-                        allUsers.RemoveAt(i);
-                    }
-                }
-            }
-            foreach (var item in allUsers)
-            {
-                if (item != user)
-                {
-                    validUsers.Add(item);
-                }
-            }
-            SearchPageViewModel model = new SearchPageViewModel()
-            {
-                Friends = user.FriendsFrom,
-                Users = validUsers
-            };
+            var model = await _serviceLogic.SearchIndex(user);
             return View(model);
         }
 
-        public IActionResult Search(string userInputName)
+        public async Task<IActionResult> Search(string userInputName)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
-            var allUsers = _userManager.Users.ToListAsync().Result;
-            user.FriendsFrom = dbContext.FriendsRequest.Where(m => m.friendToId == user.Id).ToList();
-            List<ApplicationUser> validUsers = new List<ApplicationUser>();
-            if (userInputName != null)
-            {
-                // var users = await dbContext.Users.ToListAsync();
-                foreach (var item in allUsers)
-                {
-                    string validName = "";
-                    var name = item.firstName.ToArray();
-                    for (int i = 0; i < userInputName.Length; i++)
-                    {
-                        validName += name[i];
-                    }
-                    if (validName == userInputName && item != user)
-                    {
-                        validUsers.Add(item);
-                    }
-                }
-                for (int i = 0; i < allUsers.Count; i++)
-                {
-                    for (int j = 0; j < user.FriendsFrom.Count; j++)
-                    {
-                        if (user.FriendsFrom[j].friendFrom == allUsers[i])
-                        {
-                            allUsers.RemoveAt(i);
-                        }
-                    }
-                }
-                SearchPageViewModel model1 = new SearchPageViewModel()
-                {
-                    Friends = user.FriendsFrom,
-                    Users = validUsers
-                };
-                return View("Index", model1);
-            }
-            for (int i = 0; i < allUsers.Count; i++)
-            {
-                for (int j = 0; j < user.FriendsFrom.Count; j++)
-                {
-                    if (user.FriendsFrom[j].friendFrom == allUsers[i])
-                    {
-                        allUsers.RemoveAt(i);
-                    }
-                }
-            }
-            foreach (var item in allUsers)
-            {
-                if (item != user)
-                {
-                    validUsers.Add(item);
-                }
-            }
-            SearchPageViewModel model = new SearchPageViewModel()
-            {
-                Friends = user.FriendsFrom,
-                Users = validUsers
-            };
-
-
+            SearchPageViewModel model = await _serviceLogic.SearchUser(user, userInputName);
             return View("Index", model);
         }
 
@@ -137,119 +58,31 @@ namespace SocNetwork_.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
             ApplicationUser userTo = _userManager.FindByIdAsync(id).Result;
-            FriendRequest friendRequest = new FriendRequest()
-            {
-                friendFrom = user,
-                friendTo = userTo,
-                RequestTime = DateTime.Now,
-                isConfirmed = false
-            };
-            dbContext.FriendsRequest.Add(friendRequest);
-            dbContext.SaveChanges();
-            await _userManager.UpdateAsync(user);
-            await _signInManager.RefreshSignInAsync(user);
+            await _serviceLogic.SearchUserAddFriend(user, userTo);
             return LocalRedirect("~/Search"); ;
         }
+
         public async Task<IActionResult> Accept(string id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
             ApplicationUser friendUser = _userManager.FindByIdAsync(id).Result;
-            Friends newFriend = new Friends()
-            {
-                friendUser = friendUser,
-                friendUserId = id,
-                user = user,
-                userId = userId,
-            };
-
-            Friends newFriendTo = new Friends()
-            {
-                friendUser = user,
-                friendUserId = userId,
-                user = friendUser,
-                userId = id,
-            };
-            foreach (var item in dbContext.FriendsRequest)
-            {
-                if (item.friendFromId == id)
-                {
-                    dbContext.FriendsRequest.Remove(item);
-                }
-            }
-            dbContext.Friends.Add(newFriend);
-            dbContext.Friends.Add(newFriendTo);
-            dbContext.SaveChanges();
-            await _userManager.UpdateAsync(user);
-            await _signInManager.RefreshSignInAsync(user);
+            await _serviceLogic.AcceptFreindRequest(friendUser, user, id, userId);
             return LocalRedirect("~/Search"); ;
         }
-        public IActionResult Decline(string id)
+
+        public async Task<IActionResult> Decline(string id)
         {
-            foreach (var item in dbContext.FriendsRequest)
-            {
-                if (item.friendFromId == id)
-                {
-                    dbContext.FriendsRequest.Remove(item);
-                    dbContext.SaveChanges();
-                }
-            }
+            await _serviceLogic.DeclineFreindRequest(id);
             return View();
         }
-        public IActionResult UserViewPage(string id)
+
+        public async Task<IActionResult> UserViewPage(string id)
         {
-            bool thisIsFriend=false;
-            string friendRequest = null;
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
             ApplicationUser userView = _userManager.FindByIdAsync(id).Result;
-            List<Friends> userVirwFriends = dbContext.Friends.Where(m => m.userId == userView.Id).ToList();
-            userView.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == userView.Id).ToList();
-            foreach (var item in userVirwFriends)
-            {
-                ApplicationUser friendUser = _userManager.FindByIdAsync(item.friendUserId).Result;
-                item.friendUser = friendUser;
-            }
-            foreach (var item in userView.UserPictures)
-            {
-                item.LikedUsers = dbContext.LikedUsers.Where(m => m.UserPictureId == item.id).ToList();
-                item.CommentingUsers = dbContext.CommentingUsers.Where(m => m.UserPictureId == item.id).ToList();
-                item.CommentingUsers = item.CommentingUsers.OrderBy(s => s.DateTime).ToList();
-            }
-
-            List<Friends> friends = dbContext.Friends.Where(m => m.userId == user.Id).ToList();
-            foreach (var item in friends)
-            {
-                if(item.friendUserId==id)
-                {
-                    thisIsFriend = true;
-                };
-            };
-
-            List<FriendRequest> friendRequest1 = dbContext.FriendsRequest.Where(m => m.friendFromId == userView.Id).ToList();
-            foreach (var item in friendRequest1)
-            {
-                if(item.friendToId==user.Id)
-                {
-                    friendRequest = "true";
-                }
-            }
-            List<FriendRequest> friendRequest2 = dbContext.FriendsRequest.Where(m => m.friendToId == userView.Id).ToList();
-            foreach (var item in friendRequest2)
-            {
-                if (item.friendFromId == user.Id)
-                {
-                    friendRequest ="false";
-                }
-            }
-            FriendsViewModel model = new FriendsViewModel()
-            {
-                UserViewFriends = userVirwFriends,
-                UserView = userView,
-                SignInUser = user,
-                ThisIsFriend = thisIsFriend,
-                FriendRequest=friendRequest
-            };
+            var model = await _serviceLogic.UserView(userView, user, id);
             return View(model);
         }
         // GET: SearchController/Details/5

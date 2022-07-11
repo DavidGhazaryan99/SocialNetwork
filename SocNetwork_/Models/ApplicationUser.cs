@@ -22,7 +22,6 @@ namespace SocNetwork_.Models
         public List<UserPictures> UserPictures { get; set; }
         public List<FriendRequest> FriendsFrom { get; set; }
         public List<FriendRequest> FriendsTo { get; set; }
-       // public List<Friends> Friends { get; set; }
 
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using SocNetwork_.Data;
 using SocNetwork_.Hubs;
 using SocNetwork_.Models;
+using SocNetwork_.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,8 @@ namespace SocNetwork_
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddSignalR();
+            services.AddTransient<ServiceLogic>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

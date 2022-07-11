@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SocNetwork_.Data;
 using SocNetwork_.Models;
+using SocNetwork_.Service;
 using SocNetwork_.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -19,19 +20,13 @@ namespace SocNetwork_.Controllers
     public class ChatController : Controller
     {
         private readonly ILogger<ChatController> _logger;
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly ApplicationDbContext dbContext;
-        private readonly IWebHostEnvironment webHostEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        public ChatController(ILogger<ChatController> logger, IHttpContextAccessor httpContextAccessor, ApplicationDbContext _context, IWebHostEnvironment hostEnvironment, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly ServiceLogic _serviceLogic;
+        public ChatController(ServiceLogic serviceLogic,ILogger<ChatController> logger, UserManager<ApplicationUser> userManager)
         {
-            _signInManager = signInManager;
+            _serviceLogic = serviceLogic;
             _userManager = userManager;
             _logger = logger;
-            this.httpContextAccessor = httpContextAccessor;
-            dbContext = _context;
-            webHostEnvironment = hostEnvironment;
         }
 
         // GET: ChatController
@@ -39,38 +34,11 @@ namespace SocNetwork_.Controllers
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
-            List<Friends> friends = dbContext.Friends.Where(m => m.userId == user.Id).ToList();
+
             if (User.Identity.IsAuthenticated)
                 ViewBag.CurrentUserName = user.firstName + " " + user.lastName;
 
-            foreach (var item in friends)
-            {
-                ApplicationUser friendUser = _userManager.FindByIdAsync(item.friendUserId).Result;
-                item.friendUser = friendUser;
-            }
-            var all = await dbContext.Messages.ToListAsync();
-            var messages = await dbContext.Messages.Where(
-                m =>( m.UserID == user.Id &&
-                m.ReceiverId == friends.First().friendUser.Id )||
-                (m.UserID == friends.First().friendUser.Id &&
-                m.ReceiverId == user.Id)
-                ).ToListAsync();
-
-            foreach (var item in messages)
-            {
-                ApplicationUser messageUser = _userManager.FindByIdAsync(item.UserID).Result;
-                item.User = messageUser;
-            }
-
-
-            ChatViewModel model = new ChatViewModel()
-            {
-                UserViewFriends = friends,
-                UserView = friends.First().friendUser,
-                ThisIsFriend = true,
-                SignInUser = user,
-                Messages = messages
-            };
+            ChatViewModel model = await _serviceLogic.ChatView(userId, user);
             return View(model);
         }
 
@@ -83,8 +51,7 @@ namespace SocNetwork_.Controllers
                 message.UserID = user.Id;
                 message.UserName = User.Identity.Name;
                 message.User = user;
-                await dbContext.Messages.AddAsync(message);
-                await dbContext.SaveChangesAsync();
+                await _serviceLogic.CreateMessage(message);
                 return Ok();
             }
             return Error();

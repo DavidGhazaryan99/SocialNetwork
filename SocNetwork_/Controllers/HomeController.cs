@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SocNetwork_.Data;
+using SocNetwork_.ModelDto;
 using SocNetwork_.Models;
+using SocNetwork_.Service;
 using SocNetwork_.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -18,22 +20,17 @@ namespace SocNetwork_.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly ApplicationDbContext dbContext;
-        private readonly IWebHostEnvironment webHostEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, ApplicationDbContext context, IWebHostEnvironment hostEnvironment, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly ServiceLogic _serviceLogic;
+
+        public HomeController(ServiceLogic ServiceLogic, ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
         {
-            _signInManager = signInManager;
+            _serviceLogic = ServiceLogic;
             _userManager = userManager;
             _logger = logger;
-            this.httpContextAccessor = httpContextAccessor;
-            dbContext = context;
-            webHostEnvironment = hostEnvironment;
         }
 
-        public IActionResult Index(string textForPost, IFormFile postFile)
+        public async Task<ActionResult> Index(string textForPost, IFormFile postFile)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -41,57 +38,12 @@ namespace SocNetwork_.Controllers
                 ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
                 if (textForPost != null && postFile != null)
                 {
-                    UserPictures userPictures = new UserPictures()
-                    {
-                        textForPicture = textForPost,
-                        Picture = UploadedFile(postFile),
-                        ApplicationUser = user,
-                        dateTimePost = Convert.ToDateTime(DateTime.Now.ToString("dd'/'MM'/'yyyy HH:mm:ss"))
-                    };
-                    dbContext.UserPictures.Add(userPictures);
-                    dbContext.SaveChanges();
-                    _userManager.UpdateAsync(user);
-                    _signInManager.RefreshSignInAsync(user);
-                }
-                List<UserPictures> friendsPost = new List<UserPictures>();
-                user.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == userId).ToList();
-                friendsPost.AddRange(user.UserPictures);
-                List<Friends> friends = dbContext.Friends.Where(m => m.userId == user.Id).ToList();
-
-                foreach (var item in friends)
-                {
-                    ApplicationUser friendUser = _userManager.FindByIdAsync(item.friendUserId).Result;
-                    item.friendUser = friendUser;
-                    item.friendUser.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == item.friendUserId).ToList();
+                    await _serviceLogic.CreatePost(textForPost, postFile, user);
                 }
 
-                foreach (var item in friends)
-                {
-                    friendsPost.AddRange(item.friendUser.UserPictures);
-                }
+                var posts = await _serviceLogic.GetPosts(user, userId);
 
-                foreach (var item in friendsPost)
-                {
-                    item.LikedUsers = dbContext.LikedUsers.Where(m => m.UserPictureId == item.id).ToList();
-                    item.CommentingUsers = dbContext.CommentingUsers.Where(m => m.UserPictureId == item.id).ToList();
-                    item.CommentingUsers = item.CommentingUsers.OrderBy(s => s.DateTime).ToList();
-                    foreach (var item2 in item.CommentingUsers)
-                    {
-                        item2.CommentingUser = _userManager.FindByIdAsync(item2.CommentingUserId).Result;
-                    }
-                }
-
-                friendsPost = friendsPost.OrderBy(s => s.dateTimePost).ToList();
-                PostViewModel post = new PostViewModel()
-                {
-                    id = user.Id,
-                    firstName = user.firstName,
-                    lastName = user.lastName,
-                    profilePicture = user.ProfilePicture,
-                    post = friendsPost,
-                };
-
-                return View(post);
+                return View(posts);
             }
             else
                 return View();
@@ -117,104 +69,29 @@ namespace SocNetwork_.Controllers
             return View();
         }
 
-        public IActionResult Photos()
+        public async Task<IActionResult> Photos()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
-            user.UserPictures = dbContext.UserPictures.Where(m => m.ApplicationUserId == user.Id).ToList();
-            foreach (var item in user.UserPictures)
-            {
-                item.LikedUsers = dbContext.LikedUsers.Where(m => m.UserPictureId == item.id).ToList();
-                item.CommentingUsers = dbContext.CommentingUsers.Where(m => m.UserPictureId == item.id).ToList();
-                item.CommentingUsers = item.CommentingUsers.OrderBy(s => s.DateTime).ToList();
-                foreach (var item2 in item.CommentingUsers)
-                {
-                    item2.CommentingUser = _userManager.FindByIdAsync(item2.CommentingUserId).Result;
-                }
-                foreach (var item2 in item.LikedUsers)
-                {
-                    item2.LikedUser = _userManager.FindByIdAsync(item2.LikedUserId).Result;
-                }
-            }
+            user.UserPictures = await _serviceLogic.GetPhotos(userId);
+
             return View(user);
         }
+
         [HttpPost]
-        public async Task<JsonResult> AddLike(int id, string PageName)
+        public async Task<JsonResult> AddLike(int id)
         {
-            bool liked = false;
             var userId = _userManager.GetUserId(HttpContext.User);
-            ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
-            List<LikedUsers> likedUsers = dbContext.LikedUsers.Where(m => m.LikedUserId == user.Id).ToList();
-            UserPictures userPicture = dbContext.UserPictures.Where(m => m.id == id).First();
-            foreach (var item in likedUsers)
-            {
-                if (item.UserPictureId == id)
-                {
-                    liked = true;
-                }
-            }
-            LikedUsers likedUser = new LikedUsers()
-            {
-                DateTime = Convert.ToDateTime(DateTime.Now.ToString("dd'/'MM'/'yyyy HH:mm:ss")),
-                LikedUser = user,
-                LikedUserId = user.Id,
-                UserPictureId = id,
-                UserPictures = userPicture,
-                ApplicationUserId = userPicture.ApplicationUserId,
-            };
-            if (liked == true)
-            {
-                LikedUsers dislake = likedUsers.Where(m => m.UserPictureId == id).First();
-                dbContext.LikedUsers.Remove(dislake);
-            }
-            else
-            {
-                dbContext.LikedUsers.Add(likedUser);
-            }
-            dbContext.SaveChanges();
-            await _userManager.UpdateAsync(user);
-            await _signInManager.RefreshSignInAsync(user);
-            var post = dbContext.UserPictures.Where(m => m.id == id).First();
-            post.LikedUsers = dbContext.LikedUsers.Where(m => m.UserPictureId == id).ToList();
-            // int x = likedCount2.LikedUsers.Count;
-            return Json(post.LikedUsers.Count);
+            var postSrv = await _serviceLogic.AddLike(userId, id);
+
+            return Json(postSrv.LikedUsers.Count);
         }
         [HttpPost]
-        public async Task<JsonResult> AddComment(int id, string comment, string PageName)
+        public async Task<JsonResult> AddComment(int id, string comment)
         {
-            string host = httpContextAccessor.HttpContext.Request.Host.Value;
-
             var userId = _userManager.GetUserId(HttpContext.User);
-            ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
-            //  PageName = PageName.Remove(PageName.Length - 7, 7);
-            UserPictures userPicture = dbContext.UserPictures.Where(m => m.id == id).First();
-            if (comment != null)
-            {
-                CommentingUsers commentingUser = new CommentingUsers()
-                {
-                    DateTime = Convert.ToDateTime(DateTime.Now.ToString("dd'/'MM'/'yyyy HH:mm:ss")),
-                    CommentingUser = user,
-                    CommentingUserId = user.Id,
-                    UserPictureId = id,
-                    UserPictures = userPicture,
-                    Comment = comment,
-                    ApplicationUserId = userPicture.ApplicationUserId,
-                };
-                dbContext.CommentingUsers.Add(commentingUser);
-                await dbContext.SaveChangesAsync();
-            }
-            object responseData = new
-            {
-                commentigUserId= user.Id,
-                firstName = user.firstName,
-                lastName = user.lastName,
-                profilePicture = user.ProfilePicture,
-                id = user.Id,
-                dataTime = Convert.ToDateTime(DateTime.Now.ToString("dd'/'MM'/'yyyy HH:mm:ss")),
-                comment = comment
-            };
-            //return View("UserViewPage", userPicture.ApplicationUserId);
-            return Json(responseData); 
+            CommentDto responseData = await _serviceLogic.AddComment(userId, id, comment);
+            return Json(responseData);
         }
 
         public IActionResult Create()
@@ -231,23 +108,6 @@ namespace SocNetwork_.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        private string UploadedFile(IFormFile Picture)
-        {
-            var file = Picture;
-            if (file.Length > 0)
-            {
-                using (var ms = new MemoryStream())
-                {
-                    file.CopyTo(ms);
-                    var fileBytes = ms.ToArray();
-                    string s = Convert.ToBase64String(fileBytes);
-                    // act on the Base64 data
-                    return s;
-                }
-            }
-            return null;
         }
     }
 }

@@ -5,131 +5,49 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SocNetwork_.Data;
 using SocNetwork_.Models;
+using SocNetwork_.Service;
 using SocNetwork_.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SocNetwork_.Controllers
 {
     public class FriendController : Controller
     {
         private readonly ILogger<FriendController> _logger;
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly ApplicationDbContext dbContext;
-        private readonly IWebHostEnvironment webHostEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        public FriendController(ILogger<FriendController> logger, IHttpContextAccessor httpContextAccessor, ApplicationDbContext context, IWebHostEnvironment hostEnvironment, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly ServiceLogic _serviceLogic;
+
+        public FriendController(ServiceLogic serviceLogic, ILogger<FriendController> logger, UserManager<ApplicationUser> userManager)
         {
-            _signInManager = signInManager;
+            _serviceLogic = serviceLogic;
             _userManager = userManager;
             _logger = logger;
-            this.httpContextAccessor = httpContextAccessor;
-            dbContext = context;
-            webHostEnvironment = hostEnvironment;
         }
         // GET: FriendController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
-            List<Friends> friends = dbContext.Friends.Where(m => m.userId == user.Id).ToList();
-            foreach (var item in friends)
-            {
-                ApplicationUser friendUser = _userManager.FindByIdAsync(item.friendUserId).Result;
-                item.friendUser = friendUser;
-            }
-            FriendsViewModel model = new FriendsViewModel()
-            {
-                UserViewFriends = friends,
-                UserView = user,
-                ThisIsFriend=true
-            };
+            FriendsViewModel model = await _serviceLogic.GetFriends(user);
             return View(model);
         }
 
-        public IActionResult Search(string userInputName)
+        public async Task<IActionResult> Search(string userInputName)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
-            List<Friends> friends = dbContext.Friends.Where(m => m.userId == user.Id).ToList();
-            foreach (var item in friends)
-            {
-                ApplicationUser friendUser = _userManager.FindByIdAsync(item.friendUserId).Result;
-                item.friendUser = friendUser;
-            }
-            if (userInputName != null)
-            {
-                foreach (var item in friends)
-                {
-                    string validName = "";
-                    var name = item.friendUser.firstName.ToArray();
-                    for (int i = 0; i < userInputName.Length; i++)
-                    {
-                        validName += name[i];
-                    }
-                    if (validName != userInputName)
-                    {
-                        friends.Remove(item);
-                    }
-                    if (friends.Count == 0)
-                    {
-                        FriendsViewModel model = new FriendsViewModel()
-                        {
-                            UserView = user,
-                            ThisIsFriend=true
-                        };
-                        return View("Index", model);
-                    }
-                }
-                FriendsViewModel model1 = new FriendsViewModel()
-                {
-                    UserView = user,
-                    UserViewFriends = friends,
-                    ThisIsFriend=true
-                };
-                return View("Index", model1);
-            }
-            FriendsViewModel model2 = new FriendsViewModel()
-            {
-                UserView = user,
-                UserViewFriends = friends,
-                ThisIsFriend=true
-            };
-            return View("Index", model2);
+            FriendsViewModel model = await _serviceLogic.SearchFriend(user, userInputName);
+            return View("Index", model);
         }
 
-        public ActionResult DeleteFriend(string id)
+        public async Task<ActionResult> DeleteFriend(string id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
             ApplicationUser friendUser = _userManager.FindByIdAsync(id).Result;
-            Friends deleteFriend = new Friends()
-            {
-                user = user,
-                userId = userId,
-                friendUser = friendUser,
-                friendUserId = id
-            };
-            Friends deleteFriend2 = new Friends()
-            {
-                user = friendUser,
-                userId = id,
-                friendUser = user,
-                friendUserId = userId
-            };
-            foreach (var item in dbContext.Friends)
-            {
-                if (item.userId == deleteFriend.userId && item.friendUserId == deleteFriend.friendUserId)
-                {
-                    dbContext.Friends.Remove(item);
-                }
-                if (item.userId == deleteFriend2.userId && item.friendUserId == deleteFriend2.friendUserId)
-                {
-                    dbContext.Friends.Remove(item);
-                }
-            }
-            dbContext.SaveChanges();
+            await _serviceLogic.DeleteFriend(user, userId, friendUser, id);
             return RedirectToAction("Index");
         }
 

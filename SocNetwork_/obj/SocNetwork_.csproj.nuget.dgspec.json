@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Arus\\Documents\\GitHub\\SocialNetwork\\SocialNetwork\\SocNetwork_\\SocNetwork_.csproj": {}
+    "C:\\Users\\Zemfira\\Desktop\\SocialNetwork-main\\SocNetwork_\\SocNetwork_.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Arus\\Documents\\GitHub\\SocialNetwork\\SocialNetwork\\SocNetwork_\\SocNetwork_.csproj": {
+    "C:\\Users\\Zemfira\\Desktop\\SocialNetwork-main\\SocNetwork_\\SocNetwork_.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Arus\\Documents\\GitHub\\SocialNetwork\\SocialNetwork\\SocNetwork_\\SocNetwork_.csproj",
+        "projectUniqueName": "C:\\Users\\Zemfira\\Desktop\\SocialNetwork-main\\SocNetwork_\\SocNetwork_.csproj",
         "projectName": "SocNetwork_",
-        "projectPath": "C:\\Users\\Arus\\Documents\\GitHub\\SocialNetwork\\SocialNetwork\\SocNetwork_\\SocNetwork_.csproj",
-        "packagesPath": "C:\\Users\\Arus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Arus\\Documents\\GitHub\\SocialNetwork\\SocialNetwork\\SocNetwork_\\obj\\",
+        "projectPath": "C:\\Users\\Zemfira\\Desktop\\SocialNetwork-main\\SocNetwork_\\SocNetwork_.csproj",
+        "packagesPath": "C:\\Users\\Zemfira\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Zemfira\\Desktop\\SocialNetwork-main\\SocNetwork_\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Arus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Zemfira\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -97,7 +97,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     }
