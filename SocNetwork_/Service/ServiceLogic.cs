@@ -66,6 +66,7 @@ namespace SocNetwork_.Service
                 }
 
                 friendsPost = friendsPost.OrderBy(s => s.dateTimePost).ToList();
+                friendsPost.Reverse();
                 PostViewModel post = new PostViewModel()
                 {
                     id = user.Id,
@@ -238,7 +239,7 @@ namespace SocNetwork_.Service
             }
         }
 
-        public async Task<ChatViewModel> ChatView(string userId, ApplicationUser user)
+        public async Task<ChatViewModel> ChatView(ApplicationUser user)
         {
             try
             {
@@ -410,6 +411,7 @@ namespace SocNetwork_.Service
         {
             try
             {
+                List<Friends> friends = dbContext.Friends.Where(m => m.friendUserId == user.Id).ToList();
                 var allUsers = _userManager.Users.ToList();
                 user.FriendsFrom = dbContext.FriendsRequest.Where(m => m.friendToId == user.Id).ToList();
                 List<ApplicationUser> validUsers = new List<ApplicationUser>();
@@ -432,8 +434,9 @@ namespace SocNetwork_.Service
                 }
                 SearchPageViewModel model = new SearchPageViewModel()
                 {
-                    Friends = user.FriendsFrom,
-                    Users = validUsers
+                    FriendsRequest = user.FriendsFrom,
+                    Users = validUsers,
+                    UserFriends = friends
                 };
                 return model;
             }
@@ -453,7 +456,6 @@ namespace SocNetwork_.Service
                 List<ApplicationUser> validUsers = new List<ApplicationUser>();
                 if (userInputName != null)
                 {
-                    // var users = await dbContext.Users.ToListAsync();
                     foreach (var item in allUsers)
                     {
                         string validName = "";
@@ -479,7 +481,7 @@ namespace SocNetwork_.Service
                     }
                     SearchPageViewModel model1 = new SearchPageViewModel()
                     {
-                        Friends = user.FriendsFrom,
+                        FriendsRequest = user.FriendsFrom,
                         Users = validUsers
                     };
                     return model1;
@@ -503,7 +505,7 @@ namespace SocNetwork_.Service
                 }
                 SearchPageViewModel model = new SearchPageViewModel()
                 {
-                    Friends = user.FriendsFrom,
+                    FriendsRequest = user.FriendsFrom,
                     Users = validUsers
                 };
                 return model;
@@ -557,6 +559,7 @@ namespace SocNetwork_.Service
                     user = friendUser,
                     userId = friendUserId,
                 };
+
                 foreach (var item in dbContext.FriendsRequest)
                 {
                     if (item.friendFromId == friendUserId)
@@ -564,6 +567,7 @@ namespace SocNetwork_.Service
                         dbContext.FriendsRequest.Remove(item);
                     }
                 }
+
                 await dbContext.Friends.AddAsync(newFriend);
                 await dbContext.Friends.AddAsync(newFriendTo);
                 await dbContext.SaveChangesAsync();
@@ -634,6 +638,7 @@ namespace SocNetwork_.Service
                         friendRequest = "true";
                     }
                 }
+
                 List<FriendRequest> friendRequest2 = dbContext.FriendsRequest.Where(m => m.friendToId == userView.Id).ToList();
                 foreach (var item in friendRequest2)
                 {
@@ -642,6 +647,7 @@ namespace SocNetwork_.Service
                         friendRequest = "false";
                     }
                 }
+
                 FriendsViewModel model = new FriendsViewModel()
                 {
                     UserViewFriends = userVirwFriends,

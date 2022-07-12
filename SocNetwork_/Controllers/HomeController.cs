@@ -48,6 +48,7 @@ namespace SocNetwork_.Controllers
             else
                 return View();
         }
+
         [HttpPost]
         public IActionResult AddNews(IFormFile image)
         {
@@ -86,6 +87,7 @@ namespace SocNetwork_.Controllers
 
             return Json(postSrv.LikedUsers.Count);
         }
+
         [HttpPost]
         public async Task<JsonResult> AddComment(int id, string comment)
         {

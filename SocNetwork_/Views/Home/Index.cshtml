@@ -211,7 +211,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="post-footer">
+                                    <div id="PostFooter" class="post-footer">
 
                                         @*<form class="input-group">
                                             <input asp-for="@item.id" name="id" id="id" hidden />
@@ -222,7 +222,7 @@
                                         </div>
                                         <button onclick="AddComment(@item.id)" style="float:right " @*asp-action="AddComment"*@ class="btn btn-outline-secondary" type="submit"><i class="fa fa-edit"></i></button>
 
-                                        <ul id="CommentList" class="comments-list">
+                                        <ul id="@item.id" class="comments-list">
                                             @foreach (var item2 in item.CommentingUsers)
                                             {
                                                 <li class="comment">

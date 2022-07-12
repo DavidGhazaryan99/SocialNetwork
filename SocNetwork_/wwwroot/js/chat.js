@@ -39,11 +39,28 @@ function sendMessage() {
 function addMessageToChat(message) {
     let isCurrentUserMessage = message.userName === username;
 
-    let container = document.createElement('div');
-    container.className = isCurrentUserMessage ? "chat-message-right pb-4" : "chat-message-left pb-4";
+    let signingUser = document.getElementById('SingnInUser').value;
+    let friendUser = document.getElementById('friendUser').innerText;
 
+    let userImg = document.getElementById('userImg').src;
+    let friendUserImg = document.getElementById('friendUserImg').src;
+
+    let container = document.createElement('div');
     let image = document.createElement('img');
-    image.src = "https://bootdey.com/img/Content/avatar/avatar1.png";
+
+    if (message.userName == signingUser)
+    {
+        container.className = "chat-message-right pb-4";
+        image.src = userImg;
+    }
+    else
+    {
+        image.src = friendUserImg;
+        container.className = "chat-message-left pb-4";
+    }
+    //container.className = isCurrentUserMessage ? "chat-message-right pb-4" : "chat-message-left pb-4";
+    //image.src = "data:image/png;base64, @Model.UserView.ProfilePicture";
+
     image.className = "rounded-circle mr-1";
     image.width = "40";
     image.height = "40";
@@ -60,44 +77,16 @@ function addMessageToChat(message) {
     flex.className = "flex-shrink-1 bg-light rounded py-2 px-3 mr-3";
     let senderName = document.createElement('div');
     senderName.className = "font-weight-bold mb-1";
-    senderName.innerHTML = message.userName;
+    senderName.innerHTML += message.userName;
     flex.appendChild(senderName);
-    flex.innerHTML=message.text;
+    flex.innerHTML+=message.text;
     let div = document.createElement('div');
-
-
-
-
-    //let sender = document.createElement('p');
-    //sender.className = "sender";
-    //sender.innerHTML = message.userName;
-    //let text = document.createElement('p');
-    //text.innerHTML = message.text;
-
-
-
-    //let when = document.createElement('span');
-    //when.className = isCurrentUserMessage ? "time-left" : "time-right";
-    //var currentdate = new Date();
-    //when.innerHTML =
-    //    (currentdate.getMonth() + 1) + "/"
-    //    + currentdate.getDate() + "/"
-    //    + currentdate.getFullYear() + " "
-    //    + currentdate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
 
     div.appendChild(image);
     div.appendChild(when2);
 
-   
+    container.appendChild(div);
+    container.appendChild(flex);
 
-    chat.appendChild(div);
-    chat.appendChild(flex);
-
-
-
-
-    //container.appendChild(sender);
-    //container.appendChild(text);
-    //container.appendChild(when);
-    //chat.appendChild(container);
+    chat.appendChild(container);
 }

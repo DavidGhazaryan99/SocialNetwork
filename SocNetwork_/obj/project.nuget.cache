@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fNEF+ou8t/GqwNPVPvDuLEP572/ouh+T0QHL9rrMNZ/exk/JOyR9niK45ZVT18bw+DxRbnpTYnRe3bLz6mTX4g==",
+  "dgSpecHash": "1iGBCo5bleClti6u4iPT5TEFkr3egA33+wgAA5CTBpvlwvqkkJk+RwgxGss6KCMuqqSXa7HTE5HHkxTHroAHgw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Zemfira\\Desktop\\SocialNetwork-main\\SocNetwork_\\SocNetwork_.csproj",
+  "projectFilePath": "C:\\Users\\Zemfira\\Documents\\GitHub\\SocialNetwork\\SocNetwork_\\SocNetwork_.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Zemfira\\.nuget\\packages\\castle.core\\4.4.1\\castle.core.4.4.1.nupkg.sha512",
     "C:\\Users\\Zemfira\\.nuget\\packages\\castle.windsor\\5.1.1\\castle.windsor.5.1.1.nupkg.sha512",

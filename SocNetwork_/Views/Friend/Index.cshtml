@@ -130,7 +130,7 @@
                                                 <h5> <a style="color:blue" href='@Url.Action("UserViewPage", "Search", new {id=@item.friendUserId })'> @item.friendUser.firstName @item.friendUser.lastName </a> </h5>
                                             </div>
                                             <div class="col-md-3 col-sm-3">
-                                                <input type="button"  value="delete" onclick="location.href='@Url.Action("DeleteFriend", "Friend", new {id=@item.friendUser.Id })'" />
+                                                <input type="button"  value="Delete" onclick="location.href='@Url.Action("DeleteFriend", "Friend", new {id=@item.friendUser.Id })'" />
                                             </div>
                                         </div>
                                     </div>

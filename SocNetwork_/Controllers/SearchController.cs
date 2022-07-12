@@ -18,22 +18,14 @@ namespace SocNetwork_.Controllers
     public class SearchController : Controller
     {
         private readonly ILogger<SearchController> _logger;
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly ApplicationDbContext dbContext;
-        private readonly IWebHostEnvironment webHostEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ServiceLogic _serviceLogic;
 
-        public SearchController(ServiceLogic serviceLogic, ILogger<SearchController> logger, IHttpContextAccessor httpContextAccessor, ApplicationDbContext context, IWebHostEnvironment hostEnvironment, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public SearchController(ServiceLogic serviceLogic, ILogger<SearchController> logger, UserManager<ApplicationUser> userManager)
         {
             _serviceLogic = serviceLogic;
-            _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
-            this.httpContextAccessor = httpContextAccessor;
-            dbContext = context;
-            webHostEnvironment = hostEnvironment;
         }
 
         // GET: SearchController
@@ -85,17 +77,13 @@ namespace SocNetwork_.Controllers
             var model = await _serviceLogic.UserView(userView, user, id);
             return View(model);
         }
+
         // GET: SearchController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
-        public ActionResult ajaxTest()
-        {
-            var allUsers = _userManager.Users.ToListAsync().Result;
 
-            return View(allUsers);
-        }
         public JsonResult GetSearchingData(string SearchBy, string SearchValue)
         {
             List<ApplicationUser> users = new List<ApplicationUser>();

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Zemfira\\Desktop\\SocialNetwork-main\\SocNetwork_\\SocNetwork_.csproj": {}
+    "C:\\Users\\Zemfira\\Documents\\GitHub\\SocialNetwork\\SocNetwork_\\SocNetwork_.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Zemfira\\Desktop\\SocialNetwork-main\\SocNetwork_\\SocNetwork_.csproj": {
+    "C:\\Users\\Zemfira\\Documents\\GitHub\\SocialNetwork\\SocNetwork_\\SocNetwork_.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Zemfira\\Desktop\\SocialNetwork-main\\SocNetwork_\\SocNetwork_.csproj",
+        "projectUniqueName": "C:\\Users\\Zemfira\\Documents\\GitHub\\SocialNetwork\\SocNetwork_\\SocNetwork_.csproj",
         "projectName": "SocNetwork_",
-        "projectPath": "C:\\Users\\Zemfira\\Desktop\\SocialNetwork-main\\SocNetwork_\\SocNetwork_.csproj",
+        "projectPath": "C:\\Users\\Zemfira\\Documents\\GitHub\\SocialNetwork\\SocNetwork_\\SocNetwork_.csproj",
         "packagesPath": "C:\\Users\\Zemfira\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Zemfira\\Desktop\\SocialNetwork-main\\SocNetwork_\\obj\\",
+        "outputPath": "C:\\Users\\Zemfira\\Documents\\GitHub\\SocialNetwork\\SocNetwork_\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Zemfira\\AppData\\Roaming\\NuGet\\NuGet.Config",

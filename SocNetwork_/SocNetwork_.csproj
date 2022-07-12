@@ -62,7 +62,6 @@
 
   <ItemGroup>
     <None Include="wwwroot\js\chat.js" />
-    <None Include="wwwroot\js\chat.min.js" />
     <None Include="wwwroot\js\signalrReqHandler.js" />
     <None Include="wwwroot\js\signalrReqHandler.min.js" />
     <None Include="wwwroot\js\signrReqHandler.js" />

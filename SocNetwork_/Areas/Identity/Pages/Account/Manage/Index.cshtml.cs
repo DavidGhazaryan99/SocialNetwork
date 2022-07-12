@@ -24,6 +24,7 @@ namespace SocNetwork_.Areas.Identity.Pages.Account.Manage
             _signInManager = signInManager;
         }
 
+
         public string Username { get; set; }
 
         [TempData]
@@ -66,6 +67,7 @@ namespace SocNetwork_.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user)
         {
+
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var firstName = user.firstName;
@@ -73,16 +75,28 @@ namespace SocNetwork_.Areas.Identity.Pages.Account.Manage
             var dateOfBirth = user.DateOfBirth;
             OldProfilePicture = user.ProfilePicture;
             var address = user.Address;
+            bool female=false;
+            bool male = false;
+            if(user.Gender=="Male")
+            {
+                male = true;
+            }
+            if(user.Gender=="Female")
+            {
+                female = true;
+            }
 
             Username = userName;
 
             Input = new InputModel
             {
-                Address=address,
+                Address = address,
                 FirstName = firstName,
                 LastName = lastName,
                 DateOfBirth = dateOfBirth,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                GenderFemale = female,
+                GenderMale=male,
             };
         }
 

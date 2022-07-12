@@ -29,7 +29,6 @@ namespace SocNetwork_.Controllers
             _logger = logger;
         }
 
-        // GET: ChatController
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -38,7 +37,7 @@ namespace SocNetwork_.Controllers
             if (User.Identity.IsAuthenticated)
                 ViewBag.CurrentUserName = user.firstName + " " + user.lastName;
 
-            ChatViewModel model = await _serviceLogic.ChatView(userId, user);
+            ChatViewModel model = await _serviceLogic.ChatView(user);
             return View(model);
         }
 
